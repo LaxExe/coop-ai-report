@@ -6,23 +6,23 @@
   <title>Protecting the Learning Value of Co-op in the Time of Generative AI</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,500;1,6..72,400&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@500;600&display=swap" rel="stylesheet">
   <style>
     :root {
-      --bg: #FBFBF9;
-      --surface: #FFFFFF;
-      --ink: #111111;
-      --muted: #555555;
-      --subtle: #888888;
-      --border: #E6E6E2;
-      --navy: #183052;
-      --slate: #94A0AC;
-      --red: #B91C1C;
-      --red-bg: #FEF2F2;
-      --green: #15803D;
-      --green-bg: #F0FDF4;
-      --sans: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
-      --serif: 'Newsreader', Georgia, serif;
+      --sans: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+      --serif: 'Instrument Serif', Georgia, serif;
+      --mono: 'JetBrains Mono', monospace;
+
+      --navy-dark: #0A1428;
+      --navy-mid: #132347;
+      --blue: #2563EB;
+      --sky: #38BDF8;
+      --teal: #0D9488;
+      --emerald: #10B981;
+      --amber: #F59E0B;
+      --gold: #FBBF24;
+      --coral: #F43F5E;
+      --violet: #7C3AED;
     }
 
     * {
@@ -33,350 +33,742 @@
 
     html {
       scroll-behavior: smooth;
-      background: var(--bg);
-      color: var(--ink);
+      scroll-padding-top: 72px;
       font-family: var(--sans);
-      font-size: 15px;
-      line-height: 1.55;
+      color: #0F172A;
+      background: #F8FAFC;
       -webkit-font-smoothing: antialiased;
     }
 
     body {
-      max-width: 920px;
-      margin: 0 auto;
-      padding: 0 24px 80px;
+      overflow-x: hidden;
+      line-height: 1.6;
     }
 
     a {
-      color: var(--navy);
-      text-decoration: underline;
-      text-underline-offset: 3px;
-    }
-
-    /* Simple Top Header */
-    header.top-nav {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      padding: 20px 0;
-      border-bottom: 1px solid var(--border);
-      font-size: 13px;
-      color: var(--muted);
-    }
-
-    .nav-links {
-      display: flex;
-      gap: 20px;
-    }
-
-    .nav-links a {
-      color: var(--muted);
+      color: inherit;
       text-decoration: none;
     }
 
-    .nav-links a:hover {
-      color: var(--ink);
+    .container {
+      max-width: 1180px;
+      margin: 0 auto;
+      padding: 0 28px;
     }
 
-    /* Hero Section */
-    .hero {
-      padding: 48px 0 36px;
-      border-bottom: 1px solid var(--border);
-    }
-
-    .meta-line {
-      font-size: 12.5px;
-      color: var(--muted);
-      margin-bottom: 12px;
-    }
-
-    h1 {
-      font-family: var(--serif);
-      font-size: clamp(28px, 4vw, 40px);
-      font-weight: 400;
-      line-height: 1.15;
-      letter-spacing: -0.015em;
-      margin-bottom: 16px;
-      color: var(--ink);
-    }
-
-    .core-question {
-      font-size: 17px;
-      color: var(--ink);
-      font-weight: 500;
-      max-width: 740px;
-      margin-bottom: 12px;
-    }
-
-    .hero-sub {
-      font-size: 14.5px;
-      color: var(--muted);
-      max-width: 720px;
-    }
-
-    mark {
-      background: #FEF3C7;
-      color: var(--ink);
-      padding: 1px 4px;
-      border-radius: 3px;
-    }
-
-    /* Section Structure */
-    section.block {
-      padding: 40px 0;
-      border-bottom: 1px solid var(--border);
-    }
-
-    .section-header {
-      margin-bottom: 24px;
-    }
-
-    .section-num {
-      font-size: 12px;
-      font-weight: 600;
-      color: var(--subtle);
-      text-transform: uppercase;
-      letter-spacing: 0.05em;
-      display: block;
-      margin-bottom: 4px;
-    }
-
-    h2 {
-      font-family: var(--serif);
-      font-size: 25px;
-      font-weight: 400;
-      color: var(--ink);
-      margin-bottom: 6px;
-    }
-
-    .section-lead {
-      font-size: 14.5px;
-      color: var(--muted);
-      max-width: 720px;
-    }
-
-    /* 2-Column Graph Grids */
-    .grid-2 {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 20px;
-    }
-
-    .card {
-      background: var(--surface);
-      border: 1px solid var(--border);
-      border-radius: 8px;
-      padding: 22px 24px;
-    }
-
-    .card-title {
-      font-size: 13.5px;
-      font-weight: 600;
-      color: var(--ink);
-      margin-bottom: 4px;
-    }
-
-    .card-caption {
-      font-size: 12.5px;
-      color: var(--muted);
-      margin-bottom: 16px;
-    }
-
-    /* Legend */
-    .legend {
+    /* ================= STICKY COLORFUL TOP NAV ================= */
+    .navbar {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 66px;
+      background: rgba(10, 20, 40, 0.88);
+      backdrop-filter: blur(14px);
+      -webkit-backdrop-filter: blur(14px);
+      border-bottom: 1px solid rgba(255, 255, 255, 0.12);
+      z-index: 1000;
       display: flex;
-      gap: 16px;
-      font-size: 12px;
-      color: var(--muted);
-      margin-bottom: 12px;
+      align-items: center;
     }
 
-    .legend span {
-      display: inline-flex;
+    .nav-inner {
+      width: 100%;
+      max-width: 1180px;
+      margin: 0 auto;
+      padding: 0 28px;
+      display: flex;
       align-items: center;
+      justify-content: space-between;
+    }
+
+    .nav-brand {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      color: #FFFFFF;
+      font-weight: 700;
+      font-size: 14px;
+    }
+
+    .uw-badge {
+      background: linear-gradient(135deg, #FBBF24, #F59E0B);
+      color: #0A1428;
+      font-family: var(--mono);
+      font-size: 11px;
+      font-weight: 700;
+      padding: 3px 8px;
+      border-radius: 6px;
+    }
+
+    .nav-pills {
+      display: flex;
       gap: 6px;
     }
 
-    .swatch {
-      width: 11px;
-      height: 11px;
-      border-radius: 2px;
-      display: inline-block;
-    }
-
-    /* Horizontal Bar Graph for Table I */
-    .h-bars {
-      display: flex;
-      flex-direction: column;
-      gap: 10px;
-    }
-
-    .h-row {
-      display: grid;
-      grid-template-columns: 1fr 130px;
-      gap: 12px;
-      align-items: center;
+    .nav-pills a {
+      color: #CBD5E1;
       font-size: 13px;
+      font-weight: 600;
+      padding: 7px 13px;
+      border-radius: 99px;
+      transition: all 0.2s ease;
     }
 
-    .h-bar-wrap {
-      display: flex;
-      align-items: center;
-      gap: 8px;
+    .nav-pills a:hover,
+    .nav-pills a.active {
+      background: rgba(56, 189, 248, 0.18);
+      color: #38BDF8;
     }
 
-    .h-track {
-      flex: 1;
-      height: 8px;
-      background: #F1F1EE;
-      border-radius: 4px;
+    /* ================= VIBRANT HERO SECTION ================= */
+    .hero {
+      padding: 130px 0 84px;
+      background:
+        radial-gradient(circle at 82% 24%, rgba(56, 189, 248, 0.24), transparent 45%),
+        radial-gradient(circle at 18% 75%, rgba(124, 58, 237, 0.25), transparent 50%),
+        linear-gradient(160deg, #070E1E 0%, #0F1E3D 55%, #162B54 100%);
+      color: #FFFFFF;
+      position: relative;
       overflow: hidden;
     }
 
-    .h-fill {
-      height: 100%;
-      border-radius: 4px;
-    }
-
-    .h-val {
-      font-size: 12px;
-      font-weight: 600;
-      white-space: nowrap;
-      min-width: 78px;
-      text-align: right;
-    }
-
-    /* 3-Step Diagram */
-    .flow-diagram {
+    .hero-grid {
       display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 16px;
-      margin-top: 16px;
+      grid-template-columns: 1.15fr 0.85fr;
+      gap: 44px;
+      align-items: center;
     }
 
-    .flow-step {
-      background: var(--surface);
-      border: 1px solid var(--border);
-      border-radius: 8px;
-      padding: 20px;
+    .eyebrow {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      font-family: var(--mono);
+      font-size: 11.5px;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      padding: 6px 13px;
+      border-radius: 99px;
+      background: rgba(56, 189, 248, 0.15);
+      border: 1px solid rgba(56, 189, 248, 0.35);
+      color: #7DD3FC;
+      margin-bottom: 18px;
     }
 
-    .flow-tag {
+    .hero h1 {
+      font-size: clamp(34px, 4.4vw, 54px);
+      font-weight: 800;
+      line-height: 1.1;
+      letter-spacing: -0.025em;
+      margin-bottom: 20px;
+    }
+
+    .hero h1 span {
+      background: linear-gradient(90deg, #FBBF24, #38BDF8);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    .hero-question-box {
+      background: rgba(255, 255, 255, 0.07);
+      border-left: 4px solid #FBBF24;
+      padding: 18px 22px;
+      border-radius: 0 12px 12px 0;
+      margin-bottom: 22px;
+      font-size: 16.5px;
+      color: #F1F5F9;
+      font-weight: 500;
+    }
+
+    .hero-lead {
+      font-size: 15.5px;
+      color: #CBD5E1;
+      margin-bottom: 26px;
+    }
+
+    .author-bar {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 14px;
+      font-size: 13px;
+      color: #94A3B8;
+      padding-top: 18px;
+      border-top: 1px solid rgba(255, 255, 255, 0.12);
+    }
+
+    .author-bar strong {
+      color: #FFFFFF;
+    }
+
+    /* Hero Right: Visual Summary Card Deck */
+    .hero-visual-card {
+      background: rgba(15, 23, 42, 0.75);
+      border: 1px solid rgba(148, 163, 184, 0.25);
+      border-radius: 20px;
+      padding: 26px;
+      box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.45);
+      backdrop-filter: blur(12px);
+    }
+
+    .kpi-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 14px;
+      margin-top: 14px;
+    }
+
+    .kpi-box {
+      padding: 18px;
+      border-radius: 14px;
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      transition: transform 0.2s ease;
+    }
+
+    .kpi-box:hover {
+      transform: translateY(-3px);
+    }
+
+    .kpi-coral {
+      background: linear-gradient(145deg, rgba(244, 63, 94, 0.2), rgba(244, 63, 94, 0.05));
+      border-color: rgba(244, 63, 94, 0.35);
+    }
+
+    .kpi-amber {
+      background: linear-gradient(145deg, rgba(245, 158, 11, 0.2), rgba(245, 158, 11, 0.05));
+      border-color: rgba(245, 158, 11, 0.35);
+    }
+
+    .kpi-sky {
+      background: linear-gradient(145deg, rgba(56, 189, 248, 0.2), rgba(56, 189, 248, 0.05));
+      border-color: rgba(56, 189, 248, 0.35);
+    }
+
+    .kpi-emerald {
+      background: linear-gradient(145deg, rgba(16, 185, 129, 0.2), rgba(16, 185, 129, 0.05));
+      border-color: rgba(16, 185, 129, 0.35);
+    }
+
+    .kpi-val {
+      font-size: 34px;
+      font-weight: 800;
+      line-height: 1.05;
+      margin-bottom: 6px;
+    }
+
+    .kpi-desc {
+      font-size: 12.5px;
+      color: #E2E8F0;
+      line-height: 1.4;
+    }
+
+    /* ================= SECTION STYLING ================= */
+    .section {
+      padding: 76px 0;
+    }
+
+    .section-alt-blue {
+      background: linear-gradient(180deg, #EFF6FF 0%, #F8FAFC 100%);
+      border-top: 1px solid #DBEAFE;
+      border-bottom: 1px solid #DBEAFE;
+    }
+
+    .section-alt-dark {
+      background: linear-gradient(160deg, #0B132B 0%, #1C2541 100%);
+      color: #FFFFFF;
+    }
+
+    .section-alt-teal {
+      background: linear-gradient(180deg, #F0FDFA 0%, #F8FAFC 100%);
+      border-top: 1px solid #CCFBF1;
+      border-bottom: 1px solid #CCFBF1;
+    }
+
+    .sec-head {
+      max-width: 820px;
+      margin-bottom: 40px;
+    }
+
+    .sec-badge {
+      display: inline-block;
+      font-family: var(--mono);
       font-size: 11.5px;
       font-weight: 600;
-      color: var(--navy);
-      margin-bottom: 6px;
-      display: block;
-    }
-
-    .flow-step h3 {
-      font-size: 15px;
-      font-weight: 600;
-      margin-bottom: 8px;
-      line-height: 1.35;
-    }
-
-    .flow-step p {
-      font-size: 13.5px;
-      color: var(--muted);
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      padding: 5px 12px;
+      border-radius: 6px;
       margin-bottom: 12px;
     }
 
-    .flow-base {
-      font-size: 12px;
-      color: var(--ink);
-      background: var(--bg);
-      border: 1px solid var(--border);
-      padding: 6px 10px;
-      border-radius: 5px;
-      display: block;
+    .badge-blue { background: #DBEAFE; color: #1D4ED8; }
+    .badge-amber { background: #FEF3C7; color: #B45309; }
+    .badge-coral { background: rgba(244, 63, 94, 0.2); color: #FDA4AF; border: 1px solid rgba(244, 63, 94, 0.35); }
+    .badge-teal { background: #CCFBF1; color: #0F766E; }
+    .badge-violet { background: #EDE9FE; color: #6D28D9; }
+
+    .sec-head h2 {
+      font-size: clamp(26px, 3.2vw, 38px);
+      font-weight: 800;
+      line-height: 1.18;
+      letter-spacing: -0.02em;
+      margin-bottom: 14px;
     }
 
-    /* Check-in Box */
-    .checkin-grid {
+    .sec-head p {
+      font-size: 16px;
+      color: #475569;
+    }
+
+    .section-alt-dark .sec-head p {
+      color: #CBD5E1;
+    }
+
+    /* Highlighted Pill Phrases */
+    mark.hl-yellow {
+      background: #FEF08A;
+      color: #0F172A;
+      padding: 2px 6px;
+      border-radius: 4px;
+      font-weight: 600;
+    }
+
+    mark.hl-red {
+      background: #FECDD3;
+      color: #881337;
+      padding: 2px 6px;
+      border-radius: 4px;
+      font-weight: 600;
+    }
+
+    mark.hl-green {
+      background: #BBF7D0;
+      color: #064E3B;
+      padding: 2px 6px;
+      border-radius: 4px;
+      font-weight: 600;
+    }
+
+    mark.hl-blue {
+      background: #BAE6FD;
+      color: #0C4A6E;
+      padding: 2px 6px;
+      border-radius: 4px;
+      font-weight: 600;
+    }
+
+    /* ================= DIAGRAM 1: THE JUNIOR ENGINEER PIPELINE ================= */
+    .pipeline-grid {
       display: grid;
-      grid-template-columns: 1.15fr 0.85fr;
+      grid-template-columns: 1fr 64px 1fr;
       gap: 20px;
+      align-items: stretch;
+      margin-bottom: 32px;
     }
 
-    .q-list {
-      list-style: decimal;
-      padding-left: 18px;
-      font-size: 13.5px;
-      color: var(--ink);
+    .pipe-card {
+      background: #FFFFFF;
+      border-radius: 16px;
+      padding: 28px;
+      border: 2px solid #E2E8F0;
+      box-shadow: 0 10px 25px -5px rgba(15, 23, 42, 0.05);
+    }
+
+    .pipe-card.traditional {
+      border-color: #10B981;
+      background: linear-gradient(180deg, #ECFDF5 0%, #FFFFFF 35%);
+    }
+
+    .pipe-card.disrupted {
+      border-color: #F43F5E;
+      background: linear-gradient(180deg, #FFF1F2 0%, #FFFFFF 35%);
+    }
+
+    .pipe-arrow {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 800;
+      color: #64748B;
+      font-size: 22px;
+    }
+
+    .step-chips {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin: 14px 0 18px;
+    }
+
+    .chip {
+      font-size: 12.5px;
+      font-weight: 600;
+      padding: 6px 12px;
+      border-radius: 8px;
+      background: #F1F5F9;
+      color: #1E293B;
+      border: 1px solid #CBD5E1;
+    }
+
+    .outcome-banner {
+      padding: 13px 16px;
+      border-radius: 10px;
+      font-size: 14px;
+      font-weight: 600;
+      margin-top: 12px;
+    }
+
+    .outcome-good {
+      background: #D1FAE5;
+      color: #065F46;
+      border: 1px solid #6EE7B7;
+    }
+
+    .outcome-bad {
+      background: #FFE4E6;
+      color: #9F1239;
+      border: 1px solid #FDA4AF;
+    }
+
+    /* ================= CHARTS & CARDS GRID ================= */
+    .two-col {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 26px;
+    }
+
+    .white-card {
+      background: #FFFFFF;
+      border: 1px solid #E2E8F0;
+      border-radius: 18px;
+      padding: 28px;
+      box-shadow: 0 12px 30px -8px rgba(15, 23, 42, 0.06);
       display: flex;
       flex-direction: column;
-      gap: 8px;
-      margin-top: 10px;
+      justify-content: space-between;
     }
 
-    /* Compact Table II */
-    table.simple-table {
-      width: 100%;
-      border-collapse: collapse;
-      font-size: 13px;
-      background: var(--surface);
-      border: 1px solid var(--border);
-      border-radius: 8px;
+    .dark-card {
+      background: rgba(255, 255, 255, 0.06);
+      border: 1px solid rgba(255, 255, 255, 0.15);
+      border-radius: 18px;
+      padding: 28px;
+      backdrop-filter: blur(10px);
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+    }
+
+    .card-head {
+      margin-bottom: 18px;
+    }
+
+    .card-head h3 {
+      font-size: 19px;
+      font-weight: 700;
+      margin-bottom: 6px;
+    }
+
+    .card-head p {
+      font-size: 14px;
+      color: #475569;
+    }
+
+    .dark-card .card-head p {
+      color: #CBD5E1;
+    }
+
+    .chart-legend {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 16px;
+      font-size: 12.5px;
+      font-weight: 600;
+      margin-bottom: 14px;
+    }
+
+    .chart-legend span {
+      display: inline-flex;
+      align-items: center;
+      gap: 7px;
+    }
+
+    .dot {
+      width: 12px;
+      height: 12px;
+      border-radius: 3px;
+      display: inline-block;
+    }
+
+    .card-foot {
+      margin-top: 18px;
+      padding-top: 14px;
+      border-top: 1px solid #E2E8F0;
+      font-size: 13.5px;
+      color: #334155;
+    }
+
+    .dark-card .card-foot {
+      border-top-color: rgba(255, 255, 255, 0.14);
+      color: #E2E8F0;
+    }
+
+    /* ================= TABLE I VISUAL BAR ROWS ================= */
+    .score-rows {
+      display: flex;
+      flex-direction: column;
+      gap: 11px;
+    }
+
+    .score-item {
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      border-radius: 10px;
+      padding: 11px 14px;
+    }
+
+    .score-top {
+      display: flex;
+      justify-content: space-between;
+      font-size: 13.5px;
+      font-weight: 600;
+      margin-bottom: 7px;
+    }
+
+    .bar-bg {
+      height: 9px;
+      background: rgba(255, 255, 255, 0.1);
+      border-radius: 99px;
       overflow: hidden;
     }
 
-    table.simple-table th,
-    table.simple-table td {
-      padding: 9px 14px;
-      border-bottom: 1px solid var(--border);
-      text-align: left;
+    .bar-fill {
+      height: 100%;
+      border-radius: 99px;
     }
 
-    table.simple-table th {
-      background: #F5F5F2;
-      font-weight: 600;
-      font-size: 12px;
-      color: var(--muted);
+    /* ================= 3 RECOMMENDATIONS VISUAL ARCHITECTURE ================= */
+    .rec-cards {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 22px;
+      margin-bottom: 32px;
     }
 
-    table.simple-table tr:last-child td {
-      border-bottom: none;
-    }
-
-    table.simple-table td:nth-child(2) {
-      font-weight: 600;
-      color: var(--navy);
-      white-space: nowrap;
-    }
-
-    /* References details */
-    details {
-      margin-top: 16px;
-      background: var(--surface);
-      border: 1px solid var(--border);
-      border-radius: 8px;
-      padding: 14px 18px;
-      font-size: 13px;
-    }
-
-    summary {
-      font-weight: 600;
-      cursor: pointer;
-      color: var(--ink);
-    }
-
-    .ref-items {
-      margin-top: 12px;
+    .rec-card {
+      background: #FFFFFF;
+      border-radius: 18px;
+      border: 2px solid #E2E8F0;
+      padding: 26px;
+      box-shadow: 0 12px 28px -8px rgba(15, 23, 42, 0.06);
       display: flex;
       flex-direction: column;
-      gap: 8px;
-      color: var(--muted);
-      font-size: 12.5px;
+      justify-content: space-between;
+      position: relative;
+      overflow: hidden;
     }
 
-    @media (max-width: 740px) {
-      .grid-2,
-      .flow-diagram,
-      .checkin-grid {
+    .rec-card::before {
+      content: "";
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 6px;
+    }
+
+    .rec-a::before { background: linear-gradient(90deg, #2563EB, #38BDF8); }
+    .rec-b::before { background: linear-gradient(90deg, #0D9488, #10B981); }
+    .rec-c::before { background: linear-gradient(90deg, #7C3AED, #EC4899); }
+
+    .rec-letter {
+      width: 38px;
+      height: 38px;
+      border-radius: 10px;
+      display: grid;
+      place-items: center;
+      font-weight: 800;
+      font-size: 16px;
+      margin-bottom: 14px;
+    }
+
+    .rec-a .rec-letter { background: #DBEAFE; color: #1D4ED8; }
+    .rec-b .rec-letter { background: #CCFBF1; color: #0F766E; }
+    .rec-c .rec-letter { background: #EDE9FE; color: #6D28D9; }
+
+    .rec-card h3 {
+      font-size: 18.5px;
+      font-weight: 800;
+      line-height: 1.28;
+      margin-bottom: 12px;
+    }
+
+    .rec-points {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 9px;
+      font-size: 14px;
+      color: #334155;
+      margin-bottom: 18px;
+    }
+
+    .rec-points li {
+      position: relative;
+      padding-left: 18px;
+    }
+
+    .rec-points li::before {
+      content: "→";
+      position: absolute;
+      left: 0;
+      color: #2563EB;
+      font-weight: 700;
+    }
+
+    .rec-foundation {
+      background: #F8FAFC;
+      border: 1px solid #CBD5E1;
+      border-radius: 10px;
+      padding: 10px 13px;
+      font-size: 12.5px;
+      font-weight: 600;
+      color: #0F172A;
+    }
+
+    /* ================= APPENDIX B INTERACTIVE CHECK-IN FLOWCHART ================= */
+    .checkin-box {
+      background: #FFFFFF;
+      border: 2px solid #0D9488;
+      border-radius: 18px;
+      padding: 30px;
+      box-shadow: 0 16px 36px -10px rgba(13, 148, 136, 0.14);
+    }
+
+    .q-cards {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 14px;
+      margin: 18px 0 24px;
+    }
+
+    .q-card {
+      background: #F0FDFA;
+      border: 1px solid #99F6E4;
+      border-radius: 12px;
+      padding: 16px;
+      font-size: 13.5px;
+      font-weight: 600;
+      color: #134E4A;
+    }
+
+    .q-card span {
+      display: block;
+      font-family: var(--mono);
+      font-size: 11px;
+      color: #0D9488;
+      margin-bottom: 6px;
+    }
+
+    .decision-branches {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 14px;
+      padding-top: 18px;
+      border-top: 1px solid #E2E8F0;
+    }
+
+    .branch {
+      padding: 15px;
+      border-radius: 12px;
+      font-size: 13.5px;
+    }
+
+    .branch-green { background: #ECFDF5; border: 1px solid #6EE7B7; color: #065F46; }
+    .branch-amber { background: #FFFBEB; border: 1px solid #FCD34D; color: #92400E; }
+    .branch-red { background: #FFF1F2; border: 1px solid #FDA4AF; color: #9F1239; }
+
+    /* ================= FULL REPORT & DATA TABLE TABS ================= */
+    .data-table {
+      width: 100%;
+      border-collapse: collapse;
+      background: #FFFFFF;
+      border-radius: 14px;
+      overflow: hidden;
+      border: 1px solid #E2E8F0;
+      font-size: 14px;
+      box-shadow: 0 8px 20px -6px rgba(15, 23, 42, 0.05);
+    }
+
+    .data-table th {
+      background: #0F172A;
+      color: #FFFFFF;
+      text-align: left;
+      padding: 13px 18px;
+      font-size: 12px;
+      font-family: var(--mono);
+      text-transform: uppercase;
+    }
+
+    .data-table td {
+      padding: 12px 18px;
+      border-bottom: 1px solid #E2E8F0;
+    }
+
+    .data-table tr:nth-child(even) td {
+      background: #F8FAFC;
+    }
+
+    .data-table td:nth-child(2) {
+      font-family: var(--mono);
+      font-weight: 700;
+      color: #2563EB;
+    }
+
+    details.full-accordion {
+      margin-top: 22px;
+      background: #FFFFFF;
+      border: 1px solid #CBD5E1;
+      border-radius: 12px;
+      padding: 16px 22px;
+    }
+
+    details.full-accordion summary {
+      font-weight: 700;
+      font-size: 15.5px;
+      cursor: pointer;
+      color: #0F172A;
+    }
+
+    .accordion-content {
+      margin-top: 16px;
+      padding-top: 16px;
+      border-top: 1px solid #E2E8F0;
+      font-size: 14px;
+      color: #334155;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .accordion-content a {
+      color: #2563EB;
+      text-decoration: underline;
+    }
+
+    @media (max-width: 960px) {
+      .hero-grid,
+      .pipeline-grid,
+      .two-col,
+      .rec-cards,
+      .q-cards,
+      .decision-branches {
         grid-template-columns: 1fr;
       }
-      .nav-links {
+      .pipe-arrow {
+        transform: rotate(90deg);
+      }
+      .nav-pills {
         display: none;
       }
     }
@@ -384,446 +776,654 @@
 </head>
 <body>
 
-  <!-- Simple Minimal Header -->
-  <header class="top-nav">
-    <div><strong>Lakshmanan Ramanathan</strong> • Computer Engineering, University of Waterloo</div>
-    <nav class="nav-links">
-      <a href="#hiring">1. Hiring</a>
-      <a href="#learning">2. Learning</a>
-      <a href="#incentives">3. Employers</a>
-      <a href="#recommendations">4. Recommendations</a>
-      <a href="#data">5. Key Figures</a>
-    </nav>
+  <!-- ================= STICKY TOP NAVBAR ================= -->
+  <header class="navbar">
+    <div class="nav-inner">
+      <a href="#top" class="nav-brand">
+        <span class="uw-badge">UW ECE</span>
+        <span>Co-op &amp; Generative AI Report</span>
+      </a>
+      <nav class="nav-pills">
+        <a href="#problem">1. The Problem</a>
+        <a href="#hiring">2. Hiring Graphs</a>
+        <a href="#learning">3. Learning Gap</a>
+        <a href="#employers">4. Why SPE Fails</a>
+        <a href="#solutions">5. 3 Recommendations</a>
+        <a href="#data">6. All Data &amp; Sources</a>
+      </nav>
+    </div>
   </header>
 
-  <!-- Hero: Core Question & Thesis -->
-  <section class="hero">
-    <div class="meta-line">
-      Prepared for Prof. Mahesh Tripunitara (Associate Chair for Undergraduate Studies, ECE) • COMMST 192 • Nov 19, 2026
-    </div>
-    <h1>Protecting the Learning Value of Co-op in the Time of Generative AI</h1>
-    <p class="core-question">
-      If agentic tools now handle most of the tasks once given to junior engineers, how can ECE make sure co-op remains a place where students learn?
-    </p>
-    <p class="hero-sub">
-      Since co-op is where ECE students build their engineering judgment, <mark>the core risk is not just fewer co-op roles, but a shallower learning experience in the roles students do get.</mark>
-    </p>
-  </section>
-
-  <!-- 1. Entry-Level Hiring Graphs -->
-  <section class="block" id="hiring">
-    <div class="section-header">
-      <span class="section-num">1. Entry-Level Hiring is Shrinking</span>
-      <h2>Fewer entry-level openings and much more competition for each one</h2>
-      <p class="section-lead">
-        This drop comes mainly from employers hiring fewer young workers rather than laying them off, and it is concentrated in jobs where AI is used to automate tasks, while experienced workers are not impacted by much [1].
-      </p>
-    </div>
-
-    <div class="grid-2">
-      <!-- Graph 1: Fig 1 Statistics Canada -->
-      <div class="card">
-        <div class="card-title">Fig. 1. Youth (15 to 29) monthly hiring rates in Canada [2]</div>
-        <div class="card-caption">
-          Coding-intensive jobs now have the lowest youth hiring rate of all the groups measured at <mark>1.9%</mark>, down from a 15-year high of 5.8% in late 2021 [2].
-        </div>
-        <div class="legend">
-          <span><i class="swatch" style="background:var(--slate);"></i> 6 mos before Nov. 2022</span>
-          <span><i class="swatch" style="background:var(--navy);"></i> 6 mos before Aug. 2026</span>
-        </div>
-        <svg viewBox="0 0 420 215" width="100%" height="auto">
-          <line x1="34" y1="15" x2="34" y2="165" stroke="#111" stroke-width="1.2"/>
-          <text x="26" y="20" text-anchor="end" font-size="10" fill="#555">5%</text>
-          <text x="26" y="50" text-anchor="end" font-size="10" fill="#555">4%</text>
-          <text x="26" y="80" text-anchor="end" font-size="10" fill="#555">3%</text>
-          <text x="26" y="110" text-anchor="end" font-size="10" fill="#555">2%</text>
-          <text x="26" y="140" text-anchor="end" font-size="10" fill="#555">1%</text>
-          <text x="26" y="168" text-anchor="end" font-size="10" fill="#555">0</text>
-
-          <!-- Group 1: 2.9 -> 2.5 -->
-          <rect x="52" y="78" width="26" height="87" fill="#94A0AC" rx="2"/>
-          <text x="65" y="73" text-anchor="middle" font-size="10" font-weight="600">2.9</text>
-          <rect x="80" y="90" width="26" height="75" fill="#183052" rx="2"/>
-          <text x="93" y="85" text-anchor="middle" font-size="10" font-weight="600">2.5</text>
-          <text x="79" y="182" text-anchor="middle" font-size="9.5" fill="#333">High exp.,</text>
-          <text x="79" y="194" text-anchor="middle" font-size="9.5" fill="#333">high compl.</text>
-
-          <!-- Group 2: 3.2 -> 3.0 -->
-          <rect x="142" y="69" width="26" height="96" fill="#94A0AC" rx="2"/>
-          <text x="155" y="64" text-anchor="middle" font-size="10" font-weight="600">3.2</text>
-          <rect x="170" y="75" width="26" height="90" fill="#183052" rx="2"/>
-          <text x="183" y="70" text-anchor="middle" font-size="10" font-weight="600">3.0</text>
-          <text x="169" y="182" text-anchor="middle" font-size="9.5" fill="#333">High exp.,</text>
-          <text x="169" y="194" text-anchor="middle" font-size="9.5" fill="#333">less compl.</text>
-
-          <!-- Group 3: 4.0 -> 3.3 -->
-          <rect x="232" y="45" width="26" height="120" fill="#94A0AC" rx="2"/>
-          <text x="245" y="40" text-anchor="middle" font-size="10" font-weight="600">4.0</text>
-          <rect x="260" y="66" width="26" height="99" fill="#183052" rx="2"/>
-          <text x="273" y="61" text-anchor="middle" font-size="10" font-weight="600">3.3</text>
-          <text x="259" y="182" text-anchor="middle" font-size="9.5" fill="#333">Less</text>
-          <text x="259" y="194" text-anchor="middle" font-size="9.5" fill="#333">exposed</text>
-
-          <!-- Group 4: 2.5 -> 1.9 -->
-          <rect x="322" y="90" width="26" height="75" fill="#94A0AC" rx="2"/>
-          <text x="335" y="85" text-anchor="middle" font-size="10" font-weight="600">2.5</text>
-          <rect x="350" y="108" width="26" height="57" fill="#B91C1C" rx="2"/>
-          <text x="363" y="103" text-anchor="middle" font-size="10" font-weight="600" fill="#B91C1C">1.9</text>
-          <text x="349" y="182" text-anchor="middle" font-size="9.5" font-weight="600" fill="#111">Coding-</text>
-          <text x="349" y="194" text-anchor="middle" font-size="9.5" font-weight="600" fill="#111">intensive</text>
-
-          <line x1="34" y1="165" x2="400" y2="165" stroke="#111" stroke-width="1.2"/>
-        </svg>
-      </div>
-
-      <!-- Graph 2: Stanford U.S. Ages 22-25 -->
-      <div class="card">
-        <div class="card-title">U.S. Employment Change, Ages 22–25 (Nov. 2022–June 2026) [1]</div>
-        <div class="card-caption">
-          Employment of 22- to 25-year-olds in the most AI-exposed occupations is <mark>about 19% below</mark> where it would be had it kept pace with less-exposed occupations (up from 15% a year earlier) [1].
-        </div>
-
-        <svg viewBox="0 0 400 185" width="100%" height="auto" style="margin-top:12px;">
-          <!-- Center Zero Line -->
-          <line x1="40" y1="95" x2="370" y2="95" stroke="#888" stroke-dasharray="3 3"/>
-          <text x="32" y="99" text-anchor="end" font-size="10" fill="#555">0%</text>
-
-          <!-- Least exposed: +10% -->
-          <rect x="90" y="40" width="76" height="55" fill="#15803D" rx="3"/>
-          <text x="128" y="32" text-anchor="middle" font-size="13" font-weight="600" fill="#15803D">≈ +10%</text>
-          <text x="128" y="114" text-anchor="middle" font-size="11" fill="#333">Least exposed jobs</text>
-
-          <!-- Most exposed: -11% -->
-          <rect x="235" y="95" width="76" height="60" fill="#B91C1C" rx="3"/>
-          <text x="273" y="172" text-anchor="middle" font-size="13" font-weight="600" fill="#B91C1C">≈ −11%</text>
-          <text x="273" y="86" text-anchor="middle" font-size="11" fill="#333">Most AI-exposed jobs</text>
-        </svg>
-
-        <div style="font-size:12.5px; color:var(--muted); border-top:1px solid var(--border); padding-top:10px; margin-top:8px;">
-          <mark>40% of employers</mark> surveyed by the World Economic Forum plan to reduce their workforce in areas where AI can automate tasks [6].
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <!-- 2. AI Increases Output but Hurts Learning -->
-  <section class="block" id="learning">
-    <div class="section-header">
-      <span class="section-num">2. AI Increases Output but Hurts Learning</span>
-      <h2>How students use AI matters more than whether they use it</h2>
-      <p class="section-lead">
-        Programmers who used AI to learn a new coding library (Trio) scored <mark>4.15 points lower out of 27 (about 17% lower)</mark> on a follow-up quiz than those who worked without it, while also not being significantly faster [3]. The biggest gap was on debugging questions [3].
-      </p>
-    </div>
-
-    <div class="grid-2">
-      <!-- Graph 3: Table I Visualized -->
-      <div class="card">
-        <div class="card-title">Table I. Quiz Scores by Way of Using AI [3]</div>
-        <div class="card-caption">
-          Those who passed all of their coding to AI averaged <mark>below 40%</mark>, while those who only asked conceptual questions and fixed their own errors scored <mark>65% or higher</mark> [3].
-        </div>
-
-        <div class="h-bars">
-          <div class="h-row">
-            <span>Gave all coding to AI (n=4)</span>
-            <div class="h-bar-wrap">
-              <div class="h-track"><div class="h-fill" style="width:38%; background:var(--red);"></div></div>
-              <span class="h-val" style="color:var(--red);">below 40%</span>
-            </div>
-          </div>
-
-          <div class="h-row">
-            <span>Asked a few questions, then gave all coding to AI (n=4)</span>
-            <div class="h-bar-wrap">
-              <div class="h-track"><div class="h-fill" style="width:38%; background:var(--red);"></div></div>
-              <span class="h-val" style="color:var(--red);">below 40%</span>
-            </div>
-          </div>
-
-          <div class="h-row">
-            <span>Used AI to debug and verify code (n=4)</span>
-            <div class="h-bar-wrap">
-              <div class="h-track"><div class="h-fill" style="width:38%; background:var(--red);"></div></div>
-              <span class="h-val" style="color:var(--red);">below 40%</span>
-            </div>
-          </div>
-
-          <div class="h-row">
-            <span>Generated code, then asked follow-up questions (n=2)</span>
-            <div class="h-bar-wrap">
-              <div class="h-track"><div class="h-fill" style="width:72%; background:var(--green);"></div></div>
-              <span class="h-val" style="color:var(--green);">65% or higher</span>
-            </div>
-          </div>
-
-          <div class="h-row">
-            <span>Asked for code with explanations (n=3)</span>
-            <div class="h-bar-wrap">
-              <div class="h-track"><div class="h-fill" style="width:72%; background:var(--green);"></div></div>
-              <span class="h-val" style="color:var(--green);">65% or higher</span>
-            </div>
-          </div>
-
-          <div class="h-row">
-            <span><strong>Asked only conceptual questions (n=7)</strong></span>
-            <div class="h-bar-wrap">
-              <div class="h-track"><div class="h-fill" style="width:78%; background:var(--green);"></div></div>
-              <span class="h-val" style="color:var(--green);">65% or higher</span>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <!-- Graph 4: Gardella et al. 1-Week Retest Drop -->
-      <div class="card">
-        <div class="card-title">Fast and Forgettable: 1-Week Retest Score Drop [4]</div>
-        <div class="card-caption">
-          Novices working with GitHub Copilot scored <mark>about 14 points higher out of 100</mark> initially than with a human partner, but when retested alone one week later, their scores dropped by <mark>about 21 points</mark> [4].
-        </div>
-
-        <svg viewBox="0 0 380 185" width="100%" height="auto" style="margin-top:8px;">
-          <line x1="50" y1="25" x2="340" y2="25" stroke="#E6E6E2"/>
-          <text x="42" y="29" text-anchor="end" font-size="10" fill="#555">0 pts</text>
-          <line x1="50" y1="85" x2="340" y2="85" stroke="#E6E6E2"/>
-          <text x="42" y="89" text-anchor="end" font-size="10" fill="#555">−10</text>
-          <line x1="50" y1="145" x2="340" y2="145" stroke="#E6E6E2"/>
-          <text x="42" y="149" text-anchor="end" font-size="10" fill="#555">−20</text>
-
-          <!-- Partner Task Drop: -3 pts -->
-          <line x1="90" y1="25" x2="290" y2="43" stroke="#15803D" stroke-width="2.5"/>
-          <circle cx="90" cy="25" r="4" fill="#15803D"/>
-          <circle cx="290" cy="43" r="4" fill="#15803D"/>
-          <text x="298" y="47" font-size="11" font-weight="600" fill="#15803D">≈ −3 pts (Human Partner)</text>
-
-          <!-- Copilot Task Drop: -21 pts -->
-          <line x1="90" y1="25" x2="290" y2="151" stroke="#B91C1C" stroke-width="2.5"/>
-          <circle cx="90" cy="25" r="4" fill="#B91C1C"/>
-          <circle cx="290" cy="151" r="4" fill="#B91C1C"/>
-          <text x="215" y="172" font-size="11" font-weight="600" fill="#B91C1C">≈ −21 pts (GitHub Copilot)</text>
-
-          <text x="90" y="16" text-anchor="middle" font-size="10" fill="#555">Initial Task</text>
-          <text x="290" y="16" text-anchor="middle" font-size="10" fill="#555">1 Week Later (Alone)</text>
-        </svg>
-
-        <div style="font-size:12.5px; color:var(--muted); border-top:1px solid var(--border); padding-top:10px;">
-          This shows that AI made the work easier and faster in the moment, but students kept much less of what they did [4].
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <!-- 3. Why Employers Won't Fix This & Student Experience -->
-  <section class="block" id="incentives">
-    <div class="section-header">
-      <span class="section-num">3. Why Employers Will Not Fix This on Their Own</span>
-      <h2>AI boosts novice output by 34%—so the SPE will not catch shallow learning</h2>
-    </div>
-
-    <div class="grid-2">
-      <!-- Graph 5: Productivity Boost -->
-      <div class="card">
-        <div class="card-title">Productivity Gain With an AI Assistant (5,179 Support Agents) [5]</div>
-        <div class="card-caption">
-          An AI assistant increased productivity by <mark>14% on average</mark> and by <mark>34% for novice workers</mark>, while having very little effect on experienced workers [5].
-        </div>
-
-        <div class="h-bars" style="margin-top:20px;">
-          <div class="h-row" style="grid-template-columns: 150px 1fr;">
-            <span>All workers average</span>
-            <div class="h-bar-wrap">
-              <div class="h-track"><div class="h-fill" style="width:41%; background:var(--slate);"></div></div>
-              <span class="h-val">+14%</span>
-            </div>
-          </div>
-          <div class="h-row" style="grid-template-columns: 150px 1fr;">
-            <span><strong>Novice workers</strong></span>
-            <div class="h-bar-wrap">
-              <div class="h-track"><div class="h-fill" style="width:100%; background:var(--navy);"></div></div>
-              <span class="h-val" style="color:var(--navy);">+34%</span>
-            </div>
-          </div>
-        </div>
-
-        <p style="font-size:12.5px; color:var(--muted); margin-top:18px; border-top:1px solid var(--border); padding-top:10px;">
-          Since a co-op term is four months of this exact type of work, a student could finish a term with a strong evaluation and still not build the engineering judgment the term was supposed to give them. The SPE would not catch this, since it rates performance on the job and AI directly increases performance.
-        </p>
-      </div>
-
-      <!-- Student & Personal Experience Quotes -->
-      <div class="card">
-        <div class="card-title">Student and Personal Co-op Experience</div>
-        <div style="display:flex; flex-direction:column; gap:12px; margin-top:10px; font-size:13.5px; color:var(--ink);">
-          <p style="background:var(--bg); padding:12px 14px; border-radius:6px; border:1px solid var(--border);">
-            <strong>First-Year Backend Internship:</strong> “During that internship AI was capable of doing everything I did on the job, which hindered my learning experience since my employer preferred using AI as it produced working code much faster.”
-          </p>
-          <p style="background:var(--bg); padding:12px 14px; border-radius:6px; border:1px solid var(--border);">
-            <strong>Upper-Year Capstone Students (Students A–D):</strong> “AI helped them speed up coding and syntax fixes on their work terms, but they also said it often <mark>hindered their development of foundational debugging skills</mark>.”
-          </p>
-          <p style="font-size:12.5px; color:var(--muted);">
-            <strong>Safety &amp; Ethics:</strong> Engineers are responsible for the work they approve, so a graduate who cannot debug or explain code written by AI is a safety risk and not just a weaker hire.
-          </p>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <!-- 4. Three Recommendations Diagram -->
-  <section class="block" id="recommendations">
-    <div class="section-header">
-      <span class="section-num">4. Recommendations</span>
-      <h2>Three small changes to processes Waterloo already runs</h2>
-      <p class="section-lead">
-        Waterloo is in a strong position to set expectations since over 8,000 employers hire through its co-op program [10], and our students graduate with up to 24 months of paid work experience from four to six co-op terms [10].
-      </p>
-    </div>
-
-    <div class="flow-diagram">
-      <div class="flow-step">
-        <span class="flow-tag">Recommendation A</span>
-        <h3>Teach and assess AI use in a design course as a pilot</h3>
-        <p>
-          Pilot a structured AI framework in one second-year ECE design course next term that permits students to use AI freely and completely while requiring them to document and justify why AI was appropriate for specific tasks. Pair this with <mark>short no-AI debugging checks and sample oral defenses</mark>, and train students to ask conceptual questions [3].
-        </p>
-        <span class="flow-base">Builds on: Mandatory course outline AI policies [7] &amp; ECE 198 [11]</span>
-      </div>
-
-      <div class="flow-step">
-        <span class="flow-tag">Recommendation B</span>
-        <h3>Add a short learning check-in to co-op work terms</h3>
-        <p>
-          Partner with Waterloo’s Co-operative and Experiential Education office to introduce a brief midterm check-in that <mark>all employers on WaterlooWorks must agree to provide</mark> when hiring ECE students, where they assess their students’ technical growth and design decisions on the job.
-        </p>
-        <span class="flow-base">Builds on: Informal mid-term evaluation [8] + 1-page guide (Appendix B)</span>
-      </div>
-
-      <div class="flow-step">
-        <span class="flow-tag">Recommendation C</span>
-        <h3>Track ECE-specific co-op outcomes</h3>
-        <p>
-          Have ECE faculty staff collect anonymous aggregated data at the end of each work term on <mark>placement rates, role responsibilities, and student-reported AI reliance</mark>, along with the results of the employer check-ins from Recommendation B.
-        </p>
-        <span class="flow-base">Builds on: Rate My Work Term survey students already complete [9]</span>
-      </div>
-    </div>
-
-    <!-- Appendix B Check-In Guide -->
-    <div class="card" style="margin-top:20px;">
-      <div class="checkin-grid">
+  <!-- ================= VIBRANT HERO SECTION ================= -->
+  <section class="hero" id="top">
+    <div class="container">
+      <div class="hero-grid">
         <div>
-          <div class="card-title">Appendix B: Draft Employer Check-In Guide</div>
-          <p style="font-size:13px; color:var(--muted); margin-top:4px;">
-            <strong>Purpose:</strong> A 20-minute conversation around week six or seven of the work term that checks what the student has learned, in addition to what they have produced.
-          </p>
-          <ol class="q-list">
-            <li>What have you built or changed so far this term?</li>
-            <li>Which part of that work could you rebuild or debug without AI tools?</li>
-            <li>Explain one design decision you made and why you chose it.</li>
-            <li>What skill will you focus on for the rest of the term?</li>
-          </ol>
-        </div>
-        <div style="background:var(--bg); border:1px solid var(--border); border-radius:6px; padding:16px; font-size:13px; display:flex; flex-direction:column; gap:10px;">
-          <div>
-            <strong>Recording:</strong> The supervisor selects one rating in WaterlooWorks (<mark>On track</mark>, <mark>Needs support</mark>, or <mark>Not yet able to explain own work</mark>) and may add one comment. The rating is shared with the student and used only in aggregate by ECE.
+          <span class="eyebrow">Recommendation Report • University of Waterloo ECE</span>
+          <h1>Protecting the <span>Learning Value of Co-op</span> in the Time of Generative AI</h1>
+
+          <div class="hero-question-box">
+            <strong>The Core Question:</strong> If agentic tools now handle most of the tasks once given to junior engineers, how can ECE make sure co-op remains a place where students learn?
           </div>
-          <div>
-            <strong>Follow-up:</strong> If a student is rated <em>Needs support</em>, the supervisor assigns one task in the second half of the term that the student completes and explains without AI.
+
+          <p class="hero-lead">
+            Waterloo students graduate with up to <strong>24 months of paid work experience from four to six co-op terms [10]</strong>. Since co-op is where ECE students build their engineering judgment, the core risk is not just fewer co-op roles, but a <strong>shallower learning experience in the roles students do get</strong>.
+          </p>
+
+          <div class="author-bar">
+            <span><strong>Prepared by:</strong> Lakshmanan Ramanathan (Computer Engineering)</span>
+            <span>•</span>
+            <span><strong>To:</strong> Prof. Mahesh Tripunitara (Associate Chair for Undergraduate Studies, ECE)</span>
+            <span>•</span>
+            <span><strong>Course:</strong> COMMST 192 (Prof. Kate Wells) • Nov 19, 2026</span>
+          </div>
+        </div>
+
+        <!-- 4 Color-Coded Headline Stat Cards -->
+        <div class="hero-visual-card">
+          <div style="font-family:var(--mono); font-size:11.5px; text-transform:uppercase; color:#94A3B8; letter-spacing:0.06em;">
+            Key Research Findings at a Glance
+          </div>
+          <div class="kpi-grid">
+            <div class="kpi-box kpi-coral">
+              <div class="kpi-val" style="color:#FDA4AF;">−17%</div>
+              <div class="kpi-desc">Lower follow-up quiz score (4.15 pts / 27) when programmers used AI to learn a new Python library [3].</div>
+            </div>
+            <div class="kpi-box kpi-amber">
+              <div class="kpi-val" style="color:#FDE047;">−21 pts</div>
+              <div class="kpi-desc">1-week retest score drop after learning with GitHub Copilot, vs. only −3 pts after working with a human partner [4].</div>
+            </div>
+            <div class="kpi-box kpi-sky">
+              <div class="kpi-val" style="color:#7DD3FC;">1.9%</div>
+              <div class="kpi-desc">Canadian youth (15–29) monthly hiring rate in coding-intensive jobs—down from a 15-year high of 5.8% in late 2021 [2].</div>
+            </div>
+            <div class="kpi-box kpi-emerald">
+              <div class="kpi-val" style="color:#6EE7B7;">+34%</div>
+              <div class="kpi-desc">Productivity boost for novice workers using AI [5]—giving employers little incentive to prioritize deep skill retention.</div>
+            </div>
           </div>
         </div>
       </div>
     </div>
   </section>
 
-  <!-- 5. Appendix A: Key Figures & References -->
-  <section class="block" id="data" style="border-bottom:none;">
-    <div class="section-header">
-      <span class="section-num">5. Appendix A &amp; References</span>
-      <h2>Table II: Figures Used in This Report</h2>
-    </div>
-
-    <table class="simple-table">
-      <thead>
-        <tr>
-          <th>Measure</th>
-          <th>Value</th>
-          <th>Source</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr>
-          <td>U.S. employment gap, ages 22–25, most AI-exposed jobs (June 2026)</td>
-          <td>≈19% below trend</td>
-          <td>[1]</td>
-        </tr>
-        <tr>
-          <td>Same gap one year earlier</td>
-          <td>≈15%</td>
-          <td>[1]</td>
-        </tr>
-        <tr>
-          <td>Employment change, most exposed jobs, ages 22–25 (Nov. 2022–June 2026)</td>
-          <td>≈ −11%</td>
-          <td>[1]</td>
-        </tr>
-        <tr>
-          <td>Employment change, least exposed jobs, ages 22–25</td>
-          <td>≈ +10%</td>
-          <td>[1]</td>
-        </tr>
-        <tr>
-          <td>Canadian youth hiring rate, less exposed jobs</td>
-          <td>4.0% → 3.3%</td>
-          <td>[2]</td>
-        </tr>
-        <tr>
-          <td>Canadian youth hiring rate, coding-intensive jobs</td>
-          <td>2.5% → 1.9%</td>
-          <td>[2]</td>
-        </tr>
-        <tr>
-          <td>Quiz score gap, AI vs. no AI (27-point quiz)</td>
-          <td>4.15 points (≈17%)</td>
-          <td>[3]</td>
-        </tr>
-        <tr>
-          <td>Task score gain, Copilot vs. human partner (0–100)</td>
-          <td>≈ +14 points</td>
-          <td>[4]</td>
-        </tr>
-        <tr>
-          <td>One-week retest drop, Copilot vs. partner tasks</td>
-          <td>≈ −21 vs. ≈ −3 points</td>
-          <td>[4]</td>
-        </tr>
-        <tr>
-          <td>Productivity gain with AI, all vs. novice agents</td>
-          <td>14% vs. 34%</td>
-          <td>[5]</td>
-        </tr>
-        <tr>
-          <td>Employers planning cuts where AI can automate</td>
-          <td>40%</td>
-          <td>[6]</td>
-        </tr>
-      </tbody>
-    </table>
-
-    <details>
-      <summary>References [1] – [11]</summary>
-      <div class="ref-items">
-        <div><strong>[1]</strong> E. Brynjolfsson, B. Chandar, and R. Chen, “Canaries in the coal mine? Six facts about the recent employment effects of artificial intelligence,” Stanford Digital Economy Lab, Stanford Univ., Aug. 2026. <a href="https://digitaleconomy.stanford.edu/app/uploads/2026/08/Canaries_August2026.pdf" target="_blank" rel="noopener">PDF</a></div>
-        <div><strong>[2]</strong> T. Mehdi and M. Frenette, “Hiring and job separation rates in the era of generative artificial intelligence: Early evidence,” Econ. Soc. Rep., Statistics Canada, Cat. no. 36-28-0001, Oct. 28, 2026, doi: 10.25318/36280001202601000003-eng.</div>
-        <div><strong>[3]</strong> J. H. Shen and A. Tamkin, “How AI impacts skill formation,” arXiv:2601.20245, Jan. 2026. <a href="https://arxiv.org/abs/2601.20245" target="_blank" rel="noopener">arXiv:2601.20245</a></div>
-        <div><strong>[4]</strong> N. Gardella, J. Prather, J. Leinonen, P. Denny, R. Pettit, and S. L. Riggs, “Fast and forgettable: A controlled study of novices’ performance, learning, workload, and emotion in AI-assisted and human pair programming paradigms,” arXiv:2604.18538, Apr. 2026. <a href="https://arxiv.org/abs/2604.18538" target="_blank" rel="noopener">arXiv:2604.18538</a></div>
-        <div><strong>[5]</strong> E. Brynjolfsson, D. Li, and L. Raymond, “Generative AI at work,” Quart. J. Econ., vol. 140, no. 2, pp. 889–942, May 2025, doi: 10.1093/qje/qjae044.</div>
-        <div><strong>[6]</strong> World Economic Forum, The Future of Jobs Report 2025. Geneva, Switzerland, Jan. 2025. <a href="https://www.weforum.org/publications/the-future-of-jobs-report-2025/" target="_blank" rel="noopener">Link</a></div>
-        <div><strong>[7]</strong> University of Waterloo, Office of the Associate Vice-President, Academic, “Course outline requirements and recommendations,” Sep. 2025. <a href="https://uwaterloo.ca/associate-vice-president-academic/course-outline-requirements-and-recommendations" target="_blank" rel="noopener">Link</a></div>
-        <div><strong>[8]</strong> University of Waterloo, “Co-op student performance evaluations,” Hire Waterloo. <a href="https://uwaterloo.ca/hire/how-to-hire/performance-evaluations" target="_blank" rel="noopener">Link</a></div>
-        <div><strong>[9]</strong> University of Waterloo, “Employer work term rating summary,” Hire Waterloo. <a href="https://uwaterloo.ca/hire/work-term-rating-summary" target="_blank" rel="noopener">Link</a></div>
-        <div><strong>[10]</strong> University of Waterloo, “Co-op programs,” Future Students. <a href="https://uwaterloo.ca/future-students/co-op" target="_blank" rel="noopener">Link</a></div>
-        <div><strong>[11]</strong> P. Lam, R. Pellizzoni, and B. Roehl, “ECE 198: Project studio,” course outline, Dept. Elect. Comput. Eng., Univ. of Waterloo, Fall 2021. <a href="https://patricklam.ca/teaching/ece198-f21.pdf" target="_blank" rel="noopener">PDF</a></div>
+  <!-- ================= 1. VISUAL DIAGRAM: HOW JUNIOR ENGINEERS BECOME SENIOR ================= -->
+  <section class="section" id="problem">
+    <div class="container">
+      <div class="sec-head">
+        <span class="sec-badge badge-amber">Section III • The Career Ladder</span>
+        <h2>How Engineers Become Senior—and How Agentic AI Breaks the Ladder</h2>
+        <p>
+          Engineers become senior by doing and progressing through junior work. With the explosive growth of agentic AI tools—which can plan and carry out multi-step coding tasks with very little human input—a large amount of this work is now being done by AI instead of by students.
+        </p>
       </div>
-    </details>
+
+      <!-- Visual Comparison Pipeline Diagram -->
+      <div class="pipeline-grid">
+        <div class="pipe-card traditional">
+          <span class="sec-badge badge-teal">Traditional Co-op Pathway</span>
+          <h3 style="font-size:20px; font-weight:800; margin-bottom:8px;">Junior Engineers Do the Low-Risk Foundational Work</h3>
+          <p style="font-size:14px; color:#475569;">
+            These tasks are given to students because they are low risk, and they are how junior engineers learn to read a codebase and make their own design decisions:
+          </p>
+          <div class="step-chips">
+            <span class="chip">1. Write first drafts of simple repetitive code</span>
+            <span class="chip">2. Fix small bugs</span>
+            <span class="chip">3. Run different tests</span>
+            <span class="chip">4. Document simple &amp; segmented systems</span>
+          </div>
+          <div class="outcome-banner outcome-good">
+            Result: Builds deep debugging skills &amp; engineering judgment to become a Senior Engineer.
+          </div>
+        </div>
+
+        <div class="pipe-arrow">VS</div>
+
+        <div class="pipe-card disrupted">
+          <span class="sec-badge" style="background:#FFE4E6; color:#BE123C;">Agentic AI Co-op Pathway</span>
+          <h3 style="font-size:20px; font-weight:800; margin-bottom:8px;">Agentic AI Automates the Junior Stage</h3>
+          <p style="font-size:14px; color:#475569;">
+            From my own summer internship as a junior backend developer and conversations with 4 upper-year ECE capstone students (Students A–D):
+          </p>
+          <div class="step-chips">
+            <span class="chip" style="background:#FFF1F2; border-color:#FECDD3;">“AI was capable of doing everything I did on the job”</span>
+            <span class="chip" style="background:#FFF1F2; border-color:#FECDD3;">“Employer preferred using AI as it produced working code much faster”</span>
+            <span class="chip" style="background:#FFF1F2; border-color:#FECDD3;">“Hindered development of foundational debugging skills”</span>
+          </div>
+          <div class="outcome-banner outcome-bad">
+            Result: Two problems for Waterloo ECE — (1) Fewer entry-level roles, and (2) Less learning in the roles students do get.
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ================= 2. HIRING DATA GRAPHS (CANADA & U.S.) ================= -->
+  <section class="section section-alt-blue" id="hiring">
+    <div class="container">
+      <div class="sec-head">
+        <span class="sec-badge badge-blue">Section V-A • Labor Market Evidence</span>
+        <h2>Entry-Level Hiring is Shrinking Across North America</h2>
+        <p>
+          The evidence on hiring is recent and measurable from Stanford’s August 2026 ADP payroll study [1], Statistics Canada’s October 2026 Labour Force Survey study [2], and the World Economic Forum [6].
+        </p>
+      </div>
+
+      <div class="two-col">
+        <!-- Graph 1: Statistics Canada Figure 1 -->
+        <div class="white-card">
+          <div>
+            <div class="card-head">
+              <h3>Fig. 1. Canadian Youth (15–29) Monthly Hiring Rates [2]</h3>
+              <p>
+                Youth hiring rates have fallen in every occupation group. Coding-intensive jobs (the closest group to ECE co-op roles) now have the <mark class="hl-red">lowest youth hiring rate of all groups at 1.9%</mark>, a drastic drop from a 15-year high of 5.8% in late 2021 [2].
+              </p>
+            </div>
+
+            <div class="chart-legend">
+              <span><i class="dot" style="background:#94A3B8;"></i> 6 months before Nov. 2022</span>
+              <span><i class="dot" style="background:#1E3A8A;"></i> 6 months before Aug. 2026</span>
+              <span><i class="dot" style="background:#E11D48;"></i> Coding-intensive (Aug. 2026)</span>
+            </div>
+
+            <svg viewBox="0 0 460 235" width="100%" height="auto">
+              <line x1="40" y1="15" x2="40" y2="180" stroke="#CBD5E1" stroke-width="1.5"/>
+              <text x="32" y="20" text-anchor="end" font-size="11" fill="#64748B">5%</text>
+              <text x="32" y="53" text-anchor="end" font-size="11" fill="#64748B">4%</text>
+              <text x="32" y="86" text-anchor="end" font-size="11" fill="#64748B">3%</text>
+              <text x="32" y="119" text-anchor="end" font-size="11" fill="#64748B">2%</text>
+              <text x="32" y="152" text-anchor="end" font-size="11" fill="#64748B">1%</text>
+              <text x="32" y="184" text-anchor="end" font-size="11" fill="#64748B">0%</text>
+
+              <!-- Grid lines -->
+              <line x1="40" y1="53" x2="440" y2="53" stroke="#F1F5F9"/>
+              <line x1="40" y1="86" x2="440" y2="86" stroke="#F1F5F9"/>
+              <line x1="40" y1="119" x2="440" y2="119" stroke="#F1F5F9"/>
+              <line x1="40" y1="152" x2="440" y2="152" stroke="#F1F5F9"/>
+
+              <!-- Group 1: 2.9 -> 2.5 -->
+              <rect x="60" y="84.3" width="30" height="95.7" fill="#94A3B8" rx="4"/>
+              <text x="75" y="78" text-anchor="middle" font-size="11" font-weight="700">2.9</text>
+              <rect x="93" y="97.5" width="30" height="82.5" fill="#1E3A8A" rx="4"/>
+              <text x="108" y="91" text-anchor="middle" font-size="11" font-weight="700" fill="#1E3A8A">2.5</text>
+              <text x="91" y="198" text-anchor="middle" font-size="10.5" font-weight="600" fill="#334155">High exposure,</text>
+              <text x="91" y="212" text-anchor="middle" font-size="10.5" fill="#64748B">high compl.</text>
+
+              <!-- Group 2: 3.2 -> 3.0 -->
+              <rect x="160" y="74.4" width="30" height="105.6" fill="#94A3B8" rx="4"/>
+              <text x="175" y="68" text-anchor="middle" font-size="11" font-weight="700">3.2</text>
+              <rect x="193" y="81" width="30" height="99" fill="#1E3A8A" rx="4"/>
+              <text x="208" y="75" text-anchor="middle" font-size="11" font-weight="700" fill="#1E3A8A">3.0</text>
+              <text x="191" y="198" text-anchor="middle" font-size="10.5" font-weight="600" fill="#334155">High exposure,</text>
+              <text x="191" y="212" text-anchor="middle" font-size="10.5" fill="#64748B">less compl.</text>
+
+              <!-- Group 3: 4.0 -> 3.3 -->
+              <rect x="260" y="48" width="30" height="132" fill="#94A3B8" rx="4"/>
+              <text x="275" y="42" text-anchor="middle" font-size="11" font-weight="700">4.0</text>
+              <rect x="293" y="71.1" width="30" height="108.9" fill="#1E3A8A" rx="4"/>
+              <text x="308" y="65" text-anchor="middle" font-size="11" font-weight="700" fill="#1E3A8A">3.3</text>
+              <text x="291" y="198" text-anchor="middle" font-size="10.5" font-weight="600" fill="#334155">Less</text>
+              <text x="291" y="212" text-anchor="middle" font-size="10.5" fill="#64748B">exposed</text>
+
+              <!-- Group 4: 2.5 -> 1.9 -->
+              <rect x="360" y="97.5" width="30" height="82.5" fill="#94A3B8" rx="4"/>
+              <text x="375" y="91" text-anchor="middle" font-size="11" font-weight="700">2.5</text>
+              <rect x="393" y="117.3" width="30" height="62.7" fill="#E11D48" rx="4"/>
+              <text x="408" y="111" text-anchor="middle" font-size="11.5" font-weight="800" fill="#E11D48">1.9%</text>
+              <text x="391" y="198" text-anchor="middle" font-size="10.5" font-weight="700" fill="#E11D48">Coding-</text>
+              <text x="391" y="212" text-anchor="middle" font-size="10.5" font-weight="700" fill="#E11D48">intensive</text>
+
+              <line x1="40" y1="180" x2="440" y2="180" stroke="#0F172A" stroke-width="1.5"/>
+            </svg>
+          </div>
+
+          <div class="card-foot">
+            <strong>Takeaway:</strong> Fewer entry-level openings and much more competition for each co-op role [2].
+          </div>
+        </div>
+
+        <!-- Graph 2: Stanford U.S. Payroll Study -->
+        <div class="white-card">
+          <div>
+            <div class="card-head">
+              <h3>U.S. Ages 22–25 Employment Divergence (Nov. 2022–June 2026) [1]</h3>
+              <p>
+                Employment of 22- to 25-year-olds in the most AI-exposed occupations (such as software development) is <mark class="hl-red">about 19% below trend</mark> (widened from 15% a year earlier) [1].
+              </p>
+            </div>
+
+            <svg viewBox="0 0 440 210" width="100%" height="auto" style="margin-top:10px;">
+              <!-- Zero Baseline -->
+              <line x1="45" y1="105" x2="415" y2="105" stroke="#64748B" stroke-width="1.5" stroke-dasharray="4 4"/>
+              <text x="36" y="109" text-anchor="end" font-size="11" font-weight="600" fill="#475569">0%</text>
+
+              <!-- Least Exposed: +10% -->
+              <rect x="85" y="38" width="105" height="67" fill="#10B981" rx="6"/>
+              <text x="137" y="28" text-anchor="middle" font-size="15" font-weight="800" fill="#059669">≈ +10% Growth</text>
+              <text x="137" y="126" text-anchor="middle" font-size="12" font-weight="700" fill="#0F172A">Least AI-Exposed Jobs</text>
+              <text x="137" y="142" text-anchor="middle" font-size="11" fill="#64748B">(Ages 22–25)</text>
+
+              <!-- Most Exposed: -11% -->
+              <rect x="255" y="105" width="105" height="73" fill="#F43F5E" rx="6"/>
+              <text x="307" y="198" text-anchor="middle" font-size="15" font-weight="800" fill="#E11D48">≈ −11% Drop</text>
+              <text x="307" y="84" text-anchor="middle" font-size="12" font-weight="700" fill="#0F172A">Most AI-Exposed Jobs</text>
+              <text x="307" y="98" text-anchor="middle" font-size="11" fill="#64748B">(Software Dev, Ages 22–25)</text>
+            </svg>
+          </div>
+
+          <div class="card-foot">
+            <strong>Why it’s happening:</strong> Driven by employers hiring fewer young workers rather than laying them off, while experienced workers are not impacted by much [1]. Furthermore, <mark class="hl-yellow">40% of employers plan to reduce their workforce</mark> where AI can automate tasks [6].
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ================= 3. LEARNING IMPACT GRAPHS (DARK HIGH-CONTRAST SECTION) ================= -->
+  <section class="section section-alt-dark" id="learning">
+    <div class="container">
+      <div class="sec-head">
+        <span class="sec-badge badge-coral">Section V-B • Controlled Learning Experiments</span>
+        <h2>AI Increases Short-Term Output—But Hurts Deep Learning &amp; Debugging</h2>
+        <p>
+          Two controlled studies testing novices after they work with an AI assistant show the exact same pattern: novices who pass their work to AI perform as well or better in the moment, but understand and retain much less afterward [3], [4].
+        </p>
+      </div>
+
+      <div class="two-col">
+        <!-- Graph 3: Table I (Shen & Tamkin) -->
+        <div class="dark-card">
+          <div>
+            <div class="card-head">
+              <h3>Table I. Quiz Scores by Way of Using AI (Shen &amp; Tamkin, n = 52) [3]</h3>
+              <p>
+                Developers learned <em>Trio</em> (an unfamiliar Python async library). Overall, the AI group scored <mark class="hl-red">4.15 points lower out of 27 (≈17% lower)</mark> while not finishing significantly faster [3]. <strong>How</strong> they used AI made the biggest difference:
+              </p>
+            </div>
+
+            <div class="score-rows">
+              <div class="score-item">
+                <div class="score-top">
+                  <span>Gave all coding to AI (n = 4)</span>
+                  <span style="color:#FDA4AF;">below 40%</span>
+                </div>
+                <div class="bar-bg"><div class="bar-fill" style="width:36%; background:#F43F5E;"></div></div>
+              </div>
+
+              <div class="score-item">
+                <div class="score-top">
+                  <span>Asked a few questions, then gave all coding to AI (n = 4)</span>
+                  <span style="color:#FDA4AF;">below 40%</span>
+                </div>
+                <div class="bar-bg"><div class="bar-fill" style="width:36%; background:#F43F5E;"></div></div>
+              </div>
+
+              <div class="score-item">
+                <div class="score-top">
+                  <span>Used AI to debug and verify code (n = 4)</span>
+                  <span style="color:#FDA4AF;">below 40%</span>
+                </div>
+                <div class="bar-bg"><div class="bar-fill" style="width:36%; background:#F43F5E;"></div></div>
+              </div>
+
+              <div class="score-item" style="border-color:rgba(16,185,129,0.4);">
+                <div class="score-top">
+                  <span>Generated code, then asked follow-up questions (n = 2)</span>
+                  <span style="color:#6EE7B7;">65% or higher</span>
+                </div>
+                <div class="bar-bg"><div class="bar-fill" style="width:72%; background:#10B981;"></div></div>
+              </div>
+
+              <div class="score-item" style="border-color:rgba(16,185,129,0.4);">
+                <div class="score-top">
+                  <span>Asked for code with explanations (n = 3)</span>
+                  <span style="color:#6EE7B7;">65% or higher</span>
+                </div>
+                <div class="bar-bg"><div class="bar-fill" style="width:72%; background:#10B981;"></div></div>
+              </div>
+
+              <div class="score-item" style="border-color:#10B981; background:rgba(16,185,129,0.12);">
+                <div class="score-top">
+                  <span>Asked only conceptual questions &amp; fixed own errors (n = 7)</span>
+                  <span style="color:#6EE7B7;">65% or higher</span>
+                </div>
+                <div class="bar-bg"><div class="bar-fill" style="width:82%; background:#10B981;"></div></div>
+              </div>
+            </div>
+          </div>
+
+          <div class="card-foot">
+            <strong>Key Insight:</strong> The biggest gap was on <strong>debugging questions [3]</strong>—the exact skill upper-year Waterloo ECE students said they were losing.
+          </div>
+        </div>
+
+        <!-- Graph 4: Gardella et al. Fast and Forgettable -->
+        <div class="dark-card">
+          <div>
+            <div class="card-head">
+              <h3>“Fast and Forgettable”: 1-Week Retest Drop (Gardella et al., n = 22) [4]</h3>
+              <p>
+                Novices working with GitHub Copilot scored <mark class="hl-green">≈ +14 points higher (out of 100)</mark> during the initial session with lower mental effort—but when retested <strong>alone one week later</strong>, their scores plunged by <mark class="hl-red">≈ −21 points</mark> [4].
+              </p>
+            </div>
+
+            <svg viewBox="0 0 430 250" width="100%" height="auto" style="margin-top:16px;">
+              <!-- Grid -->
+              <line x1="55" y1="45" x2="395" y2="45" stroke="rgba(255,255,255,0.15)"/>
+              <text x="45" y="49" text-anchor="end" font-size="11" fill="#94A3B8">0 pts</text>
+
+              <line x1="55" y1="115" x2="395" y2="115" stroke="rgba(255,255,255,0.12)"/>
+              <text x="45" y="119" text-anchor="end" font-size="11" fill="#94A3B8">−10 pts</text>
+
+              <line x1="55" y1="185" x2="395" y2="185" stroke="rgba(255,255,255,0.12)"/>
+              <text x="45" y="189" text-anchor="end" font-size="11" fill="#94A3B8">−20 pts</text>
+
+              <!-- X labels -->
+              <text x="105" y="25" text-anchor="middle" font-size="12" font-weight="700" fill="#E2E8F0">Initial Session</text>
+              <text x="335" y="25" text-anchor="middle" font-size="12" font-weight="700" fill="#E2E8F0">Retested Alone (1 Week Later)</text>
+
+              <!-- Human Partner Slope (-3 pts) -->
+              <line x1="105" y1="45" x2="335" y2="66" stroke="#10B981" stroke-width="4"/>
+              <circle cx="105" cy="45" r="6" fill="#10B981"/>
+              <circle cx="335" cy="66" r="6" fill="#10B981"/>
+              <rect x="235" y="76" width="175" height="28" rx="6" fill="rgba(16,185,129,0.2)" stroke="#10B981"/>
+              <text x="322" y="94" text-anchor="middle" font-size="12" font-weight="700" fill="#6EE7B7">Human Partner: ≈ −3 pts</text>
+
+              <!-- GitHub Copilot Slope (-21 pts) -->
+              <line x1="105" y1="45" x2="335" y2="192" stroke="#F43F5E" stroke-width="4"/>
+              <circle cx="105" cy="45" r="6" fill="#F43F5E"/>
+              <circle cx="335" cy="192" r="6" fill="#F43F5E"/>
+              <rect x="215" y="204" width="195" height="30" rx="6" fill="rgba(244,63,94,0.22)" stroke="#F43F5E"/>
+              <text x="312" y="223" text-anchor="middle" font-size="12.5" font-weight="800" fill="#FDA4AF">GitHub Copilot: ≈ −21 pts</text>
+            </svg>
+          </div>
+
+          <div class="card-foot">
+            <strong>Takeaway:</strong> AI made the work easier and faster in the moment, but students kept much less of what they did [4].
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ================= 4. WHY EMPLOYERS & SPE WON'T FIX THIS ON THEIR OWN ================= -->
+  <section class="section" id="employers">
+    <div class="container">
+      <div class="sec-head">
+        <span class="sec-badge badge-violet">Section VI • Discussion</span>
+        <h2>Why Employers—and Waterloo’s Current SPE—Will Not Catch This</h2>
+        <p>
+          Employers have little immediate incentive to prioritize deep skill retention unless the faculty makes it a condition of hiring from Waterloo’s ECE cohort.
+        </p>
+      </div>
+
+      <div class="two-col">
+        <!-- Graph 5: Brynjolfsson et al. Productivity Surge -->
+        <div class="white-card">
+          <div>
+            <div class="card-head">
+              <h3>Productivity Gain With AI Assistant (5,179 Support Agents) [5]</h3>
+              <p>
+                Brynjolfsson, Li, and Raymond found that an AI assistant increased productivity by <mark class="hl-blue">14% on average</mark> and by <mark class="hl-green">34% for novice workers</mark>, while having very little effect on experienced workers [5].
+              </p>
+            </div>
+
+            <svg viewBox="0 0 420 170" width="100%" height="auto" style="margin-top:10px;">
+              <!-- All workers +14% -->
+              <text x="15" y="48" font-size="13" font-weight="700" fill="#334155">All Workers Average</text>
+              <rect x="165" y="30" width="95" height="28" fill="#64748B" rx="6"/>
+              <text x="270" y="49" font-size="14" font-weight="800" fill="#334155">+14%</text>
+
+              <!-- Novice workers +34% -->
+              <text x="15" y="108" font-size="13" font-weight="800" fill="#0F172A">Novice Workers</text>
+              <rect x="165" y="90" width="210" height="32" fill="#2563EB" rx="6"/>
+              <text x="383" y="111" font-size="15" font-weight="800" fill="#2563EB">+34%</text>
+            </svg>
+          </div>
+
+          <div class="card-foot">
+            <strong>The SPE Blind Spot:</strong> A student could finish a 4-month co-op term with a strong Student Performance Evaluation (SPE) [8] and still not build engineering judgment, because the SPE rates performance on the job—and AI directly inflates performance.
+          </div>
+        </div>
+
+        <!-- Who is Affected & Alternatives Considered -->
+        <div class="white-card" style="background:linear-gradient(180deg, #F5F3FF 0%, #FFFFFF 45%); border-color:#DDD6FE;">
+          <div>
+            <div class="card-head">
+              <h3>Who Is Affected &amp; Why Alternatives Fall Short</h3>
+              <p>This problem affects students first, but goes further than just our cohort:</p>
+            </div>
+
+            <div style="display:flex; flex-direction:column; gap:12px; font-size:14px; color:#1E293B;">
+              <div style="padding:12px 15px; background:#FFFFFF; border-radius:10px; border:1px solid #E2E8F0;">
+                <strong>1. Fairness &amp; First/Second Work Terms:</strong> Students who already have strong fundamentals can use AI to work faster without losing much, while students still learning (often in their 1st or 2nd work term) lose the most.
+              </div>
+              <div style="padding:12px 15px; background:#FFFFFF; border-radius:10px; border:1px solid #E2E8F0;">
+                <strong>2. Engineering Safety Risk:</strong> Engineers are responsible for the work they approve, so a graduate who cannot debug or explain code written by AI is a <mark class="hl-red">safety risk and not just a weaker hire</mark>.
+              </div>
+              <div style="padding:12px 15px; background:#FFFFFF; border-radius:10px; border:1px solid #E2E8F0;">
+                <strong>3. Why Not Ban AI or Keep Check-Ins Voluntary?</strong> Banning AI in design courses goes against what upper-year students recommended (teaching AI coding CLIs, AI work architecture, and LLM integration) and leaves graduates unprepared. Leaving check-ins voluntary costs nothing, but Waterloo already recommends a mid-term evaluation [8] and that alone has not made it standard.
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ================= 5. THE 3 RECOMMENDATIONS & APPENDIX B CHECK-IN GUIDE ================= -->
+  <section class="section section-alt-teal" id="solutions">
+    <div class="container">
+      <div class="sec-head">
+        <span class="sec-badge badge-teal">Section II &amp; Appendix B • Action Plan</span>
+        <h2>Three Recommendations to Protect Student Learning</h2>
+        <p>
+          Small changes to processes Waterloo already runs—course outline AI policies [7], the SPE [8], and Rate My Work Term [9]—can address this problem without building new systems. Over <strong>8,000 employers</strong> hire through Waterloo co-op [10], giving the university strong leverage.
+        </p>
+      </div>
+
+      <!-- 3 Colorful Recommendation Cards -->
+      <div class="rec-cards">
+        <div class="rec-card rec-a">
+          <div>
+            <div class="rec-letter">A</div>
+            <h3>Teach and assess AI use in a design course as a pilot</h3>
+            <ul class="rec-points">
+              <li>Pilot a structured AI framework in <strong>one second-year ECE design course next term</strong> permitting free AI use while requiring students to document and justify why AI was appropriate.</li>
+              <li>Allow repetitive tasks to be done completely by AI if the decision-making process and architecture are understood.</li>
+              <li>Pair with <mark class="hl-blue">short no-AI debugging checks and sample oral defenses</mark>.</li>
+              <li>Explicitly train students to ask <strong>conceptual questions</strong> instead of generating finished code [3].</li>
+            </ul>
+          </div>
+          <div class="rec-foundation">
+            Builds on: Mandatory Waterloo course outline AI policy [7] &amp; ECE 198 [11]
+          </div>
+        </div>
+
+        <div class="rec-card rec-b">
+          <div>
+            <div class="rec-letter">B</div>
+            <h3>Add a short learning check-in to co-op work terms</h3>
+            <ul class="rec-points">
+              <li>Partner with Co-operative and Experiential Education to make a brief midterm check-in <mark class="hl-green">required for all employers on WaterlooWorks</mark> hiring ECE students.</li>
+              <li>Assesses students’ technical growth and design decisions on the job around week 6 or 7.</li>
+              <li>Provide employers with a <strong>one-page onboarding guide (Appendix B)</strong> so it adds no administrative burden.</li>
+            </ul>
+          </div>
+          <div class="rec-foundation">
+            Builds on: Existing informal mid-term evaluation suggestion [8]
+          </div>
+        </div>
+
+        <div class="rec-card rec-c">
+          <div>
+            <div class="rec-letter">C</div>
+            <h3>Track ECE-specific co-op outcomes</h3>
+            <ul class="rec-points">
+              <li>Have ECE staff collect anonymous aggregated data at the end of each term on <mark class="hl-yellow">placement rates, role responsibilities, and student-reported AI reliance</mark>.</li>
+              <li>Review alongside employer check-in ratings from Recommendation B.</li>
+              <li>Gives ECE its own longitudinal evidence within a year, since national statistics group occupations broadly [1], [2].</li>
+            </ul>
+          </div>
+          <div class="rec-foundation">
+            Builds on: Rate My Work Term survey students already complete [9]
+          </div>
+        </div>
+      </div>
+
+      <!-- Visual Flowchart of Appendix B: Draft Employer Check-In Guide -->
+      <div class="checkin-box">
+        <span class="sec-badge badge-teal">Appendix B • One-Page Employer Onboarding Guide</span>
+        <h3 style="font-size:22px; font-weight:800; margin-bottom:6px;">
+          How the 20-Minute Midterm Check-In Works (Week 6 or 7)
+        </h3>
+        <p style="font-size:14.5px; color:#475569;">
+          Checks what the student has learned, in addition to what they have produced. The supervisor asks 4 questions:
+        </p>
+
+        <div class="q-cards">
+          <div class="q-card">
+            <span>QUESTION 01</span>
+            What have you built or changed so far this term?
+          </div>
+          <div class="q-card">
+            <span>QUESTION 02</span>
+            Which part of that work could you rebuild or debug without AI tools?
+          </div>
+          <div class="q-card">
+            <span>QUESTION 03</span>
+            Explain one design decision you made and why you chose it.
+          </div>
+          <div class="q-card">
+            <span>QUESTION 04</span>
+            What skill will you focus on for the rest of the term?
+          </div>
+        </div>
+
+        <div style="font-family:var(--mono); font-size:11.5px; text-transform:uppercase; color:#0F766E; font-weight:700; margin-bottom:10px;">
+          WaterlooWorks Recording &amp; Second-Half Follow-Up Action (Shared with student; used only in aggregate by ECE):
+        </div>
+        <div class="decision-branches">
+          <div class="branch branch-green">
+            <strong>1. On track</strong><br>
+            Student can independently explain their architecture and debug their work. Continue planned work term goals.
+          </div>
+          <div class="branch branch-amber">
+            <strong>2. Needs support → Action Triggered</strong><br>
+            Supervisor assigns <strong>one task in the second half of the term</strong> that the student completes and explains without AI.
+          </div>
+          <div class="branch branch-red">
+            <strong>3. Not yet able to explain own work</strong><br>
+            Identifies severe AI over-reliance at week 6–7 so supervisor and student can intervene before the term ends.
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ================= 6. APPENDIX A (TABLE II) & REFERENCES ================= -->
+  <section class="section" id="data">
+    <div class="container">
+      <div class="sec-head">
+        <span class="sec-badge badge-blue">Appendix A • Complete Data Summary</span>
+        <h2>Table II: All Figures Used in This Report</h2>
+        <p>Every statistic below is drawn directly from the report’s six primary studies (data cutoff: November 18, 2026).</p>
+      </div>
+
+      <table class="data-table">
+        <thead>
+          <tr>
+            <th>Measure</th>
+            <th>Value</th>
+            <th>Source</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>U.S. employment gap, ages 22–25, most AI-exposed jobs (June 2026)</td>
+            <td>≈19% below trend</td>
+            <td>[1] Stanford Digital Economy Lab</td>
+          </tr>
+          <tr>
+            <td>Same gap one year earlier</td>
+            <td>≈15%</td>
+            <td>[1] Stanford Digital Economy Lab</td>
+          </tr>
+          <tr>
+            <td>Employment change, most exposed jobs, ages 22–25 (Nov. 2022–June 2026)</td>
+            <td>≈ −11%</td>
+            <td>[1] Stanford Digital Economy Lab</td>
+          </tr>
+          <tr>
+            <td>Employment change, least exposed jobs, ages 22–25</td>
+            <td>≈ +10%</td>
+            <td>[1] Stanford Digital Economy Lab</td>
+          </tr>
+          <tr>
+            <td>Canadian youth hiring rate, less exposed jobs</td>
+            <td>4.0% → 3.3%</td>
+            <td>[2] Statistics Canada (Oct. 2026)</td>
+          </tr>
+          <tr>
+            <td>Canadian youth hiring rate, coding-intensive jobs</td>
+            <td>2.5% → 1.9%</td>
+            <td>[2] Statistics Canada (Oct. 2026)</td>
+          </tr>
+          <tr>
+            <td>Quiz score gap, AI vs. no AI (27-point quiz)</td>
+            <td>4.15 points (≈17%)</td>
+            <td>[3] Shen &amp; Tamkin (Jan. 2026)</td>
+          </tr>
+          <tr>
+            <td>Task score gain, Copilot vs. human partner (0–100)</td>
+            <td>≈ +14 points</td>
+            <td>[4] Gardella et al. (Apr. 2026)</td>
+          </tr>
+          <tr>
+            <td>One-week retest drop, Copilot vs. partner tasks</td>
+            <td>≈ −21 vs. ≈ −3 points</td>
+            <td>[4] Gardella et al. (Apr. 2026)</td>
+          </tr>
+          <tr>
+            <td>Productivity gain with AI, all vs. novice agents</td>
+            <td>14% vs. 34%</td>
+            <td>[5] Brynjolfsson, Li &amp; Raymond (2025)</td>
+          </tr>
+          <tr>
+            <td>Employers planning cuts where AI can automate</td>
+            <td>40%</td>
+            <td>[6] World Economic Forum (2025)</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <!-- Possible Obstacles & Methods Accordion -->
+      <details class="full-accordion">
+        <summary>Methods &amp; Possible Obstacles (Sections IV &amp; V-E)</summary>
+        <div class="accordion-content">
+          <p><strong>Methods:</strong> This project is a literature review supported by student conversations, shaped around 3 questions on hiring, learning, and how Waterloo could respond. It pairs Stanford’s August 2026 ADP payroll study [1] with Statistics Canada’s October 2026 Labour Force Survey study [2] and the World Economic Forum’s Future of Jobs Report 2025 [6]; controlled learning experiments by Shen &amp; Tamkin (n = 52) [3] and Gardella et al. (n = 22) [4] alongside Brynjolfsson, Li &amp; Raymond [5]; and interviews with four anonymous upper-year ECE capstone students (Students A to D) plus public Waterloo documentation [7]–[11].</p>
+          <p><strong>Possible Obstacles:</strong> The main obstacles to these solutions are the extra time supervisors would need for the check-in, the time instructors would need for oral defenses in large classes, and students who may see no-AI debugging checks as a step backward.</p>
+        </div>
+      </details>
+
+      <!-- References Accordion -->
+      <details class="full-accordion" open>
+        <summary>References [1] – [11]</summary>
+        <div class="accordion-content">
+          <div><strong>[1]</strong> E. Brynjolfsson, B. Chandar, and R. Chen, “Canaries in the coal mine? Six facts about the recent employment effects of artificial intelligence,” Stanford Digital Economy Lab, Stanford Univ., Stanford, CA, USA, Aug. 2026. Accessed: Nov. 18, 2026. [Online]. Available: <a href="https://digitaleconomy.stanford.edu/app/uploads/2026/08/Canaries_August2026.pdf" target="_blank" rel="noopener">https://digitaleconomy.stanford.edu/app/uploads/2026/08/Canaries_August2026.pdf</a></div>
+          <div><strong>[2]</strong> T. Mehdi and M. Frenette, “Hiring and job separation rates in the era of generative artificial intelligence: Early evidence,” Econ. Soc. Rep., Statistics Canada, Ottawa, ON, Canada, Cat. no. 36-28-0001, Oct. 28, 2026, doi: 10.25318/36280001202601000003-eng.</div>
+          <div><strong>[3]</strong> J. H. Shen and A. Tamkin, “How AI impacts skill formation,” arXiv:2601.20245, Jan. 2026. Accessed: Nov. 18, 2026. [Online]. Available: <a href="https://arxiv.org/abs/2601.20245" target="_blank" rel="noopener">https://arxiv.org/abs/2601.20245</a></div>
+          <div><strong>[4]</strong> N. Gardella, J. Prather, J. Leinonen, P. Denny, R. Pettit, and S. L. Riggs, “Fast and forgettable: A controlled study of novices’ performance, learning, workload, and emotion in AI-assisted and human pair programming paradigms,” arXiv:2604.18538, Apr. 2026. Accessed: Nov. 18, 2026. [Online]. Available: <a href="https://arxiv.org/abs/2604.18538" target="_blank" rel="noopener">https://arxiv.org/abs/2604.18538</a></div>
+          <div><strong>[5]</strong> E. Brynjolfsson, D. Li, and L. Raymond, “Generative AI at work,” Quart. J. Econ., vol. 140, no. 2, pp. 889–942, May 2025, doi: 10.1093/qje/qjae044.</div>
+          <div><strong>[6]</strong> World Economic Forum, The Future of Jobs Report 2025. Geneva, Switzerland: World Economic Forum, Jan. 2025. Accessed: Nov. 9, 2026. [Online]. Available: <a href="https://www.weforum.org/publications/the-future-of-jobs-report-2025/" target="_blank" rel="noopener">https://www.weforum.org/publications/the-future-of-jobs-report-2025/</a></div>
+          <div><strong>[7]</strong> University of Waterloo, Office of the Associate Vice-President, Academic, “Course outline requirements and recommendations,” Sep. 2025. Accessed: Nov. 18, 2026. [Online]. Available: <a href="https://uwaterloo.ca/associate-vice-president-academic/course-outline-requirements-and-recommendations" target="_blank" rel="noopener">https://uwaterloo.ca/associate-vice-president-academic/course-outline-requirements-and-recommendations</a></div>
+          <div><strong>[8]</strong> University of Waterloo, “Co-op student performance evaluations,” Hire Waterloo. Accessed: Nov. 18, 2026. [Online]. Available: <a href="https://uwaterloo.ca/hire/how-to-hire/performance-evaluations" target="_blank" rel="noopener">https://uwaterloo.ca/hire/how-to-hire/performance-evaluations</a></div>
+          <div><strong>[9]</strong> University of Waterloo, “Employer work term rating summary,” Hire Waterloo. Accessed: Nov. 18, 2026. [Online]. Available: <a href="https://uwaterloo.ca/hire/work-term-rating-summary" target="_blank" rel="noopener">https://uwaterloo.ca/hire/work-term-rating-summary</a></div>
+          <div><strong>[10]</strong> University of Waterloo, “Co-op programs,” Future Students. Accessed: Nov. 18, 2026. [Online]. Available: <a href="https://uwaterloo.ca/future-students/co-op" target="_blank" rel="noopener">https://uwaterloo.ca/future-students/co-op</a></div>
+          <div><strong>[11]</strong> P. Lam, R. Pellizzoni, and B. Roehl, “ECE 198: Project studio,” course outline, Dept. Elect. Comput. Eng., Univ. of Waterloo, Waterloo, ON, Canada, Fall 2021. [Online]. Available: <a href="https://patricklam.ca/teaching/ece198-f21.pdf" target="_blank" rel="noopener">https://patricklam.ca/teaching/ece198-f21.pdf</a></div>
+        </div>
+      </details>
+    </div>
   </section>
 
 </body>
