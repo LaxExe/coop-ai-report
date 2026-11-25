@@ -4,31 +4,32 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Protecting the Learning Value of Co-op in the Time of Generative AI</title>
+  <meta name="description" content="If agentic tools now handle most of the tasks once given to junior engineers, how can Waterloo ECE make sure co-op remains a place where students learn?" />
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
   <style>
     :root {
-      --bg-primary: #FAF9F6;
-      --bg-secondary: #F3F2EE;
-      --surface: rgba(255, 255, 255, 0.86);
-      --surface-solid: #FFFFFF;
-      --text-main: #111315;
-      --text-muted: #525866;
-      --text-subtle: #868C98;
-      --border: #E4E2DD;
-      --border-strong: #C9C6BE;
-      --accent: #182B49;
-      --accent-soft: #EBF0F5;
-      --gold: #C59B27;
-      --gold-soft: rgba(197, 155, 39, 0.12);
-      --shadow-3d: 0 22px 44px -12px rgba(17, 19, 21, 0.07), 0 4px 12px -2px rgba(17, 19, 21, 0.04);
-      --shadow-hover: 0 30px 60px -15px rgba(24, 43, 73, 0.12), 0 8px 20px -4px rgba(17, 19, 21, 0.06);
-      --radius-lg: 16px;
-      --radius-md: 10px;
+      --edge: clamp(24px, 6vw, 96px);
+      --paper: #F5F6F3;
+      --ink: #152126;
+      --body: #46565A;
+      --line: #C8D1CE;
+      --accent: #1C5C78;
+      --sans: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+      --serif: 'Instrument Serif', Georgia, serif;
+      --mono: 'JetBrains Mono', monospace;
     }
 
-    * {
+    [data-theme="night"] {
+      --paper: #121722;
+      --ink: #F2EFE8;
+      --body: #B4BEC8;
+      --line: #2F3B4C;
+      --accent: #7CC4E8;
+    }
+
+    *, *::before, *::after {
       box-sizing: border-box;
       margin: 0;
       padding: 0;
@@ -36,630 +37,1219 @@
 
     html {
       scroll-behavior: smooth;
-      background-color: var(--bg-primary);
-      color: var(--text-main);
-      font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
-      line-height: 1.68;
+      scroll-padding-top: 76px;
+      background: var(--paper);
+      color: var(--ink);
+      font-family: var(--sans);
       -webkit-font-smoothing: antialiased;
     }
 
     body {
+      background: var(--paper);
+      color: var(--ink);
       overflow-x: hidden;
-      position: relative;
-      min-height: 100vh;
-    }
-
-    /* 3D Background WebGL Canvas */
-    #canvas-3d {
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 100vw;
-      height: 100vh;
-      z-index: 0;
-      pointer-events: none;
-      opacity: 0.9;
-    }
-
-    /* Top Minimalist Navigation & Progress Bar */
-    .top-bar {
-      position: fixed;
-      top: 0;
-      left: 0;
-      right: 0;
-      height: 60px;
-      background: rgba(250, 249, 246, 0.82);
-      backdrop-filter: blur(14px);
-      -webkit-backdrop-filter: blur(14px);
-      border-bottom: 1px solid var(--border);
-      z-index: 100;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      padding: 0 32px;
-    }
-
-    .brand-title {
-      font-family: 'JetBrains Mono', monospace;
-      font-size: 0.76rem;
-      letter-spacing: 0.06em;
-      text-transform: uppercase;
-      color: var(--text-main);
-      font-weight: 600;
-      display: flex;
-      align-items: center;
-      gap: 10px;
-    }
-
-    .brand-dot {
-      width: 8px;
-      height: 8px;
-      background: var(--accent);
-      border-radius: 50%;
-      display: inline-block;
-    }
-
-    .top-controls {
-      display: flex;
-      align-items: center;
-      gap: 14px;
-    }
-
-    .mode-btn {
-      font-family: 'JetBrains Mono', monospace;
-      font-size: 0.73rem;
-      padding: 6px 12px;
-      border-radius: 6px;
-      border: 1px solid var(--border-strong);
-      background: var(--surface-solid);
-      color: var(--text-main);
-      cursor: pointer;
-      transition: all 0.2s ease;
-    }
-
-    .mode-btn:hover {
-      border-color: var(--accent);
-      background: var(--accent-soft);
-    }
-
-    .progress-track {
-      position: fixed;
-      top: 60px;
-      left: 0;
-      width: 100%;
-      height: 2px;
-      background: transparent;
-      z-index: 101;
-    }
-
-    .progress-fill {
-      height: 100%;
-      width: 0%;
-      background: var(--accent);
-      transition: width 0.1s linear;
-    }
-
-    /* Main Layout Grid */
-    .layout-wrapper {
-      position: relative;
-      z-index: 10;
-      max-width: 1360px;
-      margin: 0 auto;
-      padding: 104px 32px 120px;
-      display: grid;
-      grid-template-columns: 270px minmax(0, 840px);
-      gap: 56px;
-      justify-content: center;
-      align-items: start;
-    }
-
-    /* Sticky 3D Index Sidebar */
-    .sidebar-nav {
-      position: sticky;
-      top: 96px;
-      background: var(--surface);
-      backdrop-filter: blur(12px);
-      -webkit-backdrop-filter: blur(12px);
-      border: 1px solid var(--border);
-      border-radius: var(--radius-lg);
-      padding: 22px 18px;
-      box-shadow: var(--shadow-3d);
-      max-height: calc(100vh - 128px);
-      overflow-y: auto;
-      transform-style: preserve-3d;
-      transition: transform 0.3s ease, box-shadow 0.3s ease;
-    }
-
-    .sidebar-label {
-      font-family: 'JetBrains Mono', monospace;
-      font-size: 0.7rem;
-      text-transform: uppercase;
-      letter-spacing: 0.08em;
-      color: var(--text-subtle);
-      margin-bottom: 12px;
-      padding-left: 10px;
-    }
-
-    .nav-list {
-      list-style: none;
-      display: flex;
-      flex-direction: column;
-      gap: 3px;
-    }
-
-    .nav-link {
-      display: block;
-      text-decoration: none;
-      font-size: 0.82rem;
-      color: var(--text-muted);
-      padding: 7px 10px;
-      border-radius: 7px;
-      transition: all 0.2s ease;
-      font-weight: 500;
-      border-left: 2px solid transparent;
-    }
-
-    .nav-link:hover {
-      color: var(--text-main);
-      background: rgba(24, 43, 73, 0.04);
-    }
-
-    .nav-link.active {
-      color: var(--accent);
-      background: var(--accent-soft);
-      border-left-color: var(--accent);
-      font-weight: 600;
-    }
-
-    .nav-sub {
-      padding-left: 22px;
-      font-size: 0.77rem;
-      font-weight: 400;
-    }
-
-    /* Content Stream */
-    .content-stream {
-      display: flex;
-      flex-direction: column;
-      gap: 44px;
-      perspective: 1400px;
-    }
-
-    /* 3D Interactive Cards */
-    .card-3d {
-      background: var(--surface);
-      backdrop-filter: blur(14px);
-      -webkit-backdrop-filter: blur(14px);
-      border: 1px solid var(--border);
-      border-radius: var(--radius-lg);
-      padding: 44px 48px;
-      box-shadow: var(--shadow-3d);
-      transform-style: preserve-3d;
-      transition: transform 0.25s cubic-bezier(0.22, 1, 0.36, 1), box-shadow 0.25s ease, border-color 0.25s ease;
-      position: relative;
-    }
-
-    .card-3d:hover {
-      box-shadow: var(--shadow-hover);
-      border-color: var(--border-strong);
-    }
-
-    .card-3d::before {
-      content: "";
-      position: absolute;
-      inset: 0;
-      border-radius: var(--radius-lg);
-      pointer-events: none;
-      background: radial-gradient(
-        650px circle at var(--mouse-x, 50%) var(--mouse-y, 50%),
-        rgba(24, 43, 73, 0.04),
-        transparent 40%
-      );
-      opacity: 0;
-      transition: opacity 0.3s ease;
-    }
-
-    .card-3d:hover::before {
-      opacity: 1;
-    }
-
-    /* Typography */
-    .section-tag {
-      font-family: 'JetBrains Mono', monospace;
-      font-size: 0.73rem;
-      text-transform: uppercase;
-      letter-spacing: 0.09em;
-      color: var(--accent);
-      background: var(--accent-soft);
-      padding: 4px 10px;
-      border-radius: 5px;
-      display: inline-block;
-      margin-bottom: 16px;
-      font-weight: 600;
-    }
-
-    h1, h2, h3 {
-      color: var(--text-main);
-      line-height: 1.22;
-    }
-
-    .hero-title {
-      font-family: 'Instrument Serif', Georgia, serif;
-      font-size: 3.1rem;
-      font-weight: 400;
-      letter-spacing: -0.015em;
-      margin-bottom: 24px;
-      color: var(--text-main);
-    }
-
-    h2.section-heading {
-      font-family: 'Instrument Serif', Georgia, serif;
-      font-size: 2.2rem;
-      font-weight: 400;
-      margin-bottom: 22px;
-      padding-bottom: 14px;
-      border-bottom: 1px solid var(--border);
-    }
-
-    h3.sub-heading {
-      font-size: 1.12rem;
-      font-weight: 600;
-      margin-top: 28px;
-      margin-bottom: 12px;
-      color: var(--accent);
-      letter-spacing: -0.01em;
-    }
-
-    h3.sub-heading:first-of-type {
-      margin-top: 12px;
-    }
-
-    p {
-      font-size: 1.01rem;
-      color: #26292E;
-      margin-bottom: 16px;
-    }
-
-    p:last-child {
-      margin-bottom: 0;
-    }
-
-    /* Letter of Transmittal Metadata Header */
-    .memo-grid {
-      display: grid;
-      grid-template-columns: 100px 1fr;
-      gap: 10px 16px;
-      background: var(--bg-secondary);
-      border: 1px solid var(--border);
-      border-radius: var(--radius-md);
-      padding: 20px 24px;
-      margin-bottom: 26px;
-      font-size: 0.92rem;
-    }
-
-    .memo-label {
-      font-family: 'JetBrains Mono', monospace;
-      font-weight: 600;
-      color: var(--text-muted);
-      font-size: 0.8rem;
-    }
-
-    .memo-value {
-      color: var(--text-main);
-      font-weight: 500;
-    }
-
-    .signature-block {
-      margin-top: 26px;
-      padding-top: 18px;
-      border-top: 1px dashed var(--border-strong);
-      display: flex;
-      flex-direction: column;
-      gap: 6px;
-    }
-
-    .enclosure {
-      margin-top: 10px;
-      font-family: 'JetBrains Mono', monospace;
-      font-size: 0.82rem;
-      color: var(--text-muted);
-    }
-
-    /* Title Cover Metadata Grid */
-    .cover-meta-grid {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 20px;
-      margin-top: 24px;
-      margin-bottom: 20px;
-    }
-
-    .meta-box {
-      background: var(--bg-secondary);
-      border: 1px solid var(--border);
-      border-radius: var(--radius-md);
-      padding: 18px 20px;
-    }
-
-    .meta-box-label {
-      font-family: 'JetBrains Mono', monospace;
-      font-size: 0.72rem;
-      text-transform: uppercase;
-      letter-spacing: 0.06em;
-      color: var(--text-subtle);
-      margin-bottom: 6px;
-    }
-
-    .meta-box-content {
-      font-size: 0.93rem;
-      color: var(--text-main);
-      line-height: 1.5;
-    }
-
-    .course-banner {
-      background: var(--surface-solid);
-      border: 1px solid var(--border);
-      border-left: 3px solid var(--accent);
-      border-radius: var(--radius-md);
-      padding: 14px 18px;
-      font-size: 0.9rem;
-      color: var(--text-muted);
-      display: flex;
-      flex-wrap: wrap;
-      justify-content: space-between;
-      gap: 10px;
-    }
-
-    /* Bullet Lists */
-    .clean-list {
-      margin: 16px 0 18px 0;
-      padding-left: 0;
-      list-style: none;
-      display: flex;
-      flex-direction: column;
-      gap: 12px;
-    }
-
-    .clean-list li {
-      position: relative;
-      padding-left: 28px;
-      font-size: 1rem;
-      color: #26292E;
-    }
-
-    .clean-list li::before {
-      content: "";
-      position: absolute;
-      left: 6px;
-      top: 10px;
-      width: 7px;
-      height: 7px;
-      border-radius: 2px;
-      background: var(--accent);
-      transform: rotate(45deg);
-    }
-
-    /* Ordered Lists for Questions */
-    .numbered-list {
-      margin: 16px 0 20px 0;
-      padding-left: 0;
-      list-style: none;
-      counter-reset: custom-counter;
-      display: flex;
-      flex-direction: column;
-      gap: 12px;
-    }
-
-    .numbered-list li {
-      counter-increment: custom-counter;
-      position: relative;
-      padding: 12px 16px 12px 46px;
-      background: var(--bg-secondary);
-      border: 1px solid var(--border);
-      border-radius: 8px;
-      font-size: 0.96rem;
-      color: var(--text-main);
-    }
-
-    .numbered-list li::before {
-      content: counter(custom-counter);
-      position: absolute;
-      left: 14px;
-      top: 50%;
-      transform: translateY(-50%);
-      width: 22px;
-      height: 22px;
-      border-radius: 50%;
-      background: var(--accent);
-      color: #FFF;
-      font-family: 'JetBrains Mono', monospace;
-      font-size: 0.75rem;
-      font-weight: 600;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-    }
-
-    /* Tables */
-    .table-container {
-      margin: 26px 0;
-      background: var(--surface-solid);
-      border: 1px solid var(--border);
-      border-radius: var(--radius-md);
-      overflow: hidden;
-      box-shadow: 0 6px 18px rgba(0, 0, 0, 0.03);
-    }
-
-    .table-header-bar {
-      padding: 14px 20px;
-      background: var(--bg-secondary);
-      border-bottom: 1px solid var(--border);
-      display: flex;
-      justify-content: space-between;
-      align-items: baseline;
-    }
-
-    .table-number {
-      font-family: 'JetBrains Mono', monospace;
-      font-size: 0.76rem;
-      font-weight: 600;
-      text-transform: uppercase;
-      color: var(--accent);
-    }
-
-    .table-title {
-      font-size: 0.94rem;
-      font-weight: 600;
-      color: var(--text-main);
-    }
-
-    table {
-      width: 100%;
-      border-collapse: collapse;
-      text-align: left;
-      font-size: 0.93rem;
-    }
-
-    th {
-      font-family: 'JetBrains Mono', monospace;
-      font-size: 0.75rem;
-      text-transform: uppercase;
-      letter-spacing: 0.04em;
-      color: var(--text-muted);
-      padding: 13px 20px;
-      background: rgba(243, 242, 238, 0.5);
-      border-bottom: 1px solid var(--border);
-    }
-
-    td {
-      padding: 13px 20px;
-      border-bottom: 1px solid var(--border);
-      color: var(--text-main);
-    }
-
-    tr:last-child td {
-      border-bottom: none;
-    }
-
-    tr:hover td {
-      background: rgba(24, 43, 73, 0.025);
-    }
-
-    /* Interactive 3D Figure 1 Chart */
-    .figure-box {
-      margin: 28px 0;
-      background: var(--surface-solid);
-      border: 1px solid var(--border);
-      border-radius: var(--radius-md);
-      padding: 28px 28px 22px;
-      box-shadow: 0 10px 26px rgba(0, 0, 0, 0.04);
-      transform-style: preserve-3d;
-    }
-
-    .chart-legend {
-      display: flex;
-      gap: 24px;
-      margin-bottom: 20px;
-      font-size: 0.84rem;
-      color: var(--text-main);
-      font-weight: 500;
-      flex-wrap: wrap;
-    }
-
-    .legend-item {
-      display: flex;
-      align-items: center;
-      gap: 8px;
-    }
-
-    .swatch-before {
-      width: 16px;
-      height: 11px;
-      background: #94A0AC;
-      border-radius: 2px;
-      display: inline-block;
-    }
-
-    .swatch-after {
-      width: 16px;
-      height: 11px;
-      background: #183052;
-      border-radius: 2px;
-      display: inline-block;
-    }
-
-    .svg-chart-wrap {
-      width: 100%;
-      overflow-x: auto;
-    }
-
-    .figure-caption {
-      margin-top: 16px;
-      padding-top: 14px;
-      border-top: 1px solid var(--border);
-      font-size: 0.86rem;
-      color: var(--text-muted);
       line-height: 1.55;
     }
 
-    /* References List */
-    .ref-list {
-      list-style: none;
+    a {
+      color: inherit;
+      text-decoration: none;
+    }
+
+    button {
+      font: inherit;
+      color: inherit;
+      background: none;
+      border: 0;
+      cursor: pointer;
+    }
+
+    .microtype {
+      font: 500 10.5px/1.5 var(--mono);
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+    }
+
+    .bound {
+      width: min(1480px, 100%);
+      margin: 0 auto;
+      padding-inline: var(--edge);
+    }
+
+    /* ================= FLOATING PILL HEADER ================= */
+    .site-head {
+      position: fixed;
+      inset: 0 0 auto;
+      z-index: 100;
+      pointer-events: none;
+      transition: all 0.3s ease;
+    }
+
+    .head-inner {
+      width: 100%;
+      max-width: 1580px;
+      margin: 0 auto;
+      padding-inline: clamp(18px, 3.5vw, 68px);
+      height: 72px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .site-head a, .site-head button, .site-head nav {
+      pointer-events: auto;
+    }
+
+    .brand-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 9px;
+      font-weight: 600;
+      font-size: 13px;
+      padding: 7px 14px;
+      border-radius: 99px;
+      background: rgba(16, 31, 55, 0.72);
+      border: 1px solid rgba(236, 247, 255, 0.25);
+      color: #FFF;
+      backdrop-filter: blur(14px);
+      -webkit-backdrop-filter: blur(14px);
+      transition: all 0.3s ease;
+    }
+
+    .brand-mark {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: #86EDF4;
+      box-shadow: 0 0 10px #86EDF4;
+    }
+
+    .desktop-nav {
+      display: flex;
+      align-items: center;
+      gap: 22px;
+      height: 40px;
+      padding: 0 20px;
+      border-radius: 24px;
+      background: rgba(16, 31, 55, 0.72);
+      border: 1px solid rgba(236, 247, 255, 0.25);
+      color: #FFF;
+      backdrop-filter: blur(14px);
+      -webkit-backdrop-filter: blur(14px);
+      transition: all 0.3s ease;
+    }
+
+    .desktop-nav a {
+      font-size: 12px;
+      font-weight: 500;
+      color: rgba(247, 248, 254, 0.8);
+      position: relative;
+      padding: 6px 0;
+      transition: color 0.2s ease;
+    }
+
+    .desktop-nav a:hover,
+    .desktop-nav a.active {
+      color: #FFF;
+    }
+
+    .desktop-nav a.active::after {
+      content: "";
+      position: absolute;
+      left: 0;
+      right: 0;
+      bottom: 1px;
+      height: 1.5px;
+      background: currentColor;
+    }
+
+    .head-actions {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 4px 10px;
+      border-radius: 24px;
+      background: rgba(16, 31, 55, 0.72);
+      border: 1px solid rgba(236, 247, 255, 0.25);
+      color: #FFF;
+      backdrop-filter: blur(14px);
+      -webkit-backdrop-filter: blur(14px);
+      transition: all 0.3s ease;
+    }
+
+    .theme-btn {
+      font: 500 11px var(--mono);
+      padding: 4px 10px;
+      border-radius: 99px;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+    }
+
+    .theme-btn:hover {
+      background: rgba(255, 255, 255, 0.14);
+    }
+
+    body.scrolled .brand-pill,
+    body.scrolled .desktop-nav,
+    body.scrolled .head-actions {
+      background: var(--paper);
+      color: var(--ink);
+      border-color: var(--line);
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.06);
+    }
+
+    body.scrolled .desktop-nav a {
+      color: var(--body);
+    }
+
+    body.scrolled .desktop-nav a:hover,
+    body.scrolled .desktop-nav a.active {
+      color: var(--ink);
+    }
+
+    /* ================= FULL-VIEWPORT 3D HERO ================= */
+    .flight-opening {
+      position: relative;
+      height: clamp(620px, 93svh, 1040px);
+      background: #081326;
+      color: #FFF;
+      overflow: hidden;
+      isolation: isolate;
+    }
+
+    #hero-canvas {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      z-index: -2;
+      display: block;
+    }
+
+    .opening-scrim {
+      position: absolute;
+      inset: 0;
+      z-index: -1;
+      background:
+        radial-gradient(circle at 68% 42%, rgba(28, 92, 120, 0.25), transparent 55%),
+        linear-gradient(0deg, rgba(5, 11, 24, 0.88), rgba(5, 11, 24, 0.28) 38%, rgba(5, 11, 24, 0.45) 100%);
+    }
+
+    .opening-registration {
+      position: absolute;
+      top: 15%;
+      left: var(--edge);
+      display: flex;
+      align-items: center;
+      gap: 11px;
+      color: #D4E0EE;
+    }
+
+    .opening-registration::before {
+      content: "";
+      width: 6px;
+      height: 6px;
+      border: 1px solid #86EDF4;
+      transform: rotate(45deg);
+    }
+
+    .opening-registration i {
+      width: 42px;
+      height: 1px;
+      background: rgba(149, 170, 190, 0.6);
+    }
+
+    .opening-fig {
+      position: absolute;
+      top: 28%;
+      right: var(--edge);
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      color: #EFF6FC;
+    }
+
+    .opening-fig i {
+      width: 38px;
+      height: 19px;
+      border-top: 1px solid #86EDF4;
+      border-left: 1px solid #86EDF4;
+      transform: skewX(-35deg);
+    }
+
+    .opening-fig span {
+      color: #9BB8D3;
+    }
+
+    .opening-ident {
+      position: absolute;
+      bottom: 13%;
+      left: var(--edge);
+      right: var(--edge);
+      max-width: 1180px;
+    }
+
+    .flight-kicker {
+      display: inline-flex;
+      align-items: center;
+      gap: 9px;
+      color: #86EDF4;
+      margin-bottom: 14px;
+    }
+
+    .flight-kicker i {
+      width: 7px;
+      height: 7px;
+      border-radius: 50%;
+      background: currentColor;
+      display: inline-block;
+    }
+
+    .opening-ident h1 {
+      font-weight: 480;
+      font-size: clamp(44px, 6.8vw, 102px);
+      line-height: 0.98;
+      letter-spacing: -0.025em;
+      margin-bottom: 24px;
+    }
+
+    .opening-ident h1 em {
+      font-family: var(--serif);
+      font-style: italic;
+      font-weight: 400;
+      color: #A8E4F8;
+    }
+
+    .opening-sub {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 36px;
+    }
+
+    .opening-sub p {
+      font-size: clamp(16px, 1.35vw, 20px);
+      font-weight: 450;
+      line-height: 1.42;
+      max-width: 620px;
+      color: #E2ECF7;
+    }
+
+    .opening-sub strong {
+      font-weight: 600;
+      color: #FFF;
+    }
+
+    .orbit-link {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      color: #FFF;
+      font-size: 13.5px;
+      font-weight: 550;
+      border-bottom: 1px solid #86EDF4;
+      padding: 7px 0;
+      transition: gap 0.2s ease, color 0.2s ease;
+    }
+
+    .orbit-link:hover {
+      gap: 15px;
+      color: #86EDF4;
+    }
+
+    .opening-bottom {
+      position: absolute;
+      bottom: 0;
+      left: var(--edge);
+      right: var(--edge);
+      height: 54px;
+      border-top: 1px solid rgba(200, 228, 239, 0.26);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      color: #D4E4F4;
+    }
+
+    /* ================= FOLIO BAR ================= */
+    .folio {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+      padding: 18px 0;
+      border-bottom: 1px solid var(--rule, var(--line));
+      color: var(--sub, var(--body));
+    }
+
+    .folio > span:first-child::before {
+      content: "";
+      display: inline-block;
+      width: 15px;
+      height: 6px;
+      margin-right: 10px;
+      transform: skewX(-23deg);
+      background: repeating-linear-gradient(90deg, currentColor 0 2px, transparent 2px 4px);
+    }
+
+    /* ================= PRELUDE / MANIFESTO ================= */
+    .prelude {
+      background: var(--paper);
+      padding: 18px 0 72px;
+      position: relative;
+    }
+
+    .prelude-line {
+      display: grid;
+      grid-template-columns: 200px 1fr;
+      gap: 44px;
+      align-items: center;
+      max-width: 1240px;
+      margin: 56px auto 48px;
+    }
+
+    .gyro-ring {
+      width: 164px;
+      height: 164px;
+      border-radius: 50%;
+      border: 1px solid var(--line);
+      display: grid;
+      place-items: center;
+      position: relative;
+      background: radial-gradient(circle at 35% 30%, rgba(28, 92, 120, 0.14), transparent 70%);
+    }
+
+    .gyro-ring svg {
+      width: 128px;
+      height: 128px;
+      color: var(--accent);
+      transition: transform 0.2s linear;
+    }
+
+    .manifesto {
+      font-size: clamp(32px, 4.3vw, 62px);
+      font-weight: 475;
+      line-height: 1.06;
+      letter-spacing: -0.02em;
+      color: var(--ink);
+    }
+
+    .manifesto em {
+      font-family: var(--serif);
+      font-style: italic;
+      font-weight: 400;
+      color: var(--accent);
+      font-size: 1.06em;
+    }
+
+    /* Key KPI Strip */
+    .kpi-strip {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 1px;
+      background: var(--line);
+      border: 1px solid var(--line);
+      margin-top: 24px;
+    }
+
+    .kpi-cell {
+      background: var(--paper);
+      padding: 28px 26px;
       display: flex;
       flex-direction: column;
-      gap: 14px;
+      justify-content: space-between;
+      gap: 10px;
     }
 
-    .ref-item {
+    .kpi-num {
+      font-family: var(--serif);
+      font-size: clamp(44px, 4.4vw, 66px);
+      line-height: 0.95;
+      color: var(--ink);
+    }
+
+    .kpi-num span {
+      color: var(--accent);
+    }
+
+    .kpi-label {
+      font-size: 14px;
+      color: var(--body);
+      line-height: 1.45;
+    }
+
+    /* ================= STUDY CHAPTERS (STICKY INSTRUMENT + BEATS) ================= */
+    .study {
+      position: relative;
+      padding: 16px 0 84px;
+      background: var(--slice);
+      color: var(--s-ink);
+    }
+
+    .study-hiring {
+      --slice: #E2ECE8;
+      --s-ink: #162D2B;
+      --sub: #395653;
+      --rule: #A5BCB4;
+      --highlight: #1C6D66;
+      --card-bg: rgba(255, 255, 255, 0.56);
+    }
+
+    .study-learning {
+      --slice: #0E111A;
+      --s-ink: #F2EFE8;
+      --sub: #B8B5BE;
+      --rule: #343644;
+      --highlight: #FFB681;
+      --card-bg: rgba(24, 28, 40, 0.85);
+    }
+
+    .study-incentives {
+      --slice: #E6EAF2;
+      --s-ink: #1D2942;
+      --sub: #44546E;
+      --rule: #A9B6C9;
+      --highlight: #395C95;
+      --card-bg: rgba(255, 255, 255, 0.62);
+    }
+
+    [data-theme="night"] .study-hiring,
+    [data-theme="night"] .study-incentives {
+      --slice: #171F2E;
+      --s-ink: #F2EFE8;
+      --sub: #B4BEC8;
+      --rule: #2F3B4C;
+      --highlight: #7CC4E8;
+      --card-bg: rgba(15, 20, 30, 0.75);
+    }
+
+    .study-title {
+      display: flex;
+      align-items: flex-end;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 28px;
+      padding: 52px 0 32px;
+    }
+
+    .study-title .flight-kicker {
+      color: var(--highlight);
+    }
+
+    .study-title h2 {
+      font-size: clamp(42px, 5.4vw, 76px);
+      font-weight: 490;
+      line-height: 1.03;
+      letter-spacing: -0.02em;
+    }
+
+    .study-title h2 em {
+      font-family: var(--serif);
+      font-style: italic;
+      font-weight: 400;
+    }
+
+    .study-title > p {
+      font-size: 19px;
+      line-height: 1.4;
+      max-width: 390px;
+      color: var(--sub);
+    }
+
+    .study-spread {
       display: grid;
-      grid-template-columns: 42px 1fr;
-      gap: 8px;
-      font-size: 0.9rem;
-      color: #2C3036;
-      padding: 12px 14px;
+      grid-template-columns: minmax(0, 1.32fr) minmax(0, 0.88fr);
+      gap: clamp(28px, 5vw, 80px);
+      align-items: start;
+    }
+
+    .study-learning .study-spread {
+      grid-template-columns: minmax(0, 0.88fr) minmax(0, 1.32fr);
+    }
+
+    .study-learning .study-visual {
+      grid-column: 2;
+      grid-row: 1;
+    }
+
+    .study-learning .beat-list {
+      grid-column: 1;
+      grid-row: 1;
+    }
+
+    /* Sticky Instrument Window */
+    .study-visual {
+      position: sticky;
+      top: max(84px, 11svh);
+      min-height: clamp(390px, 62svh, 620px);
+      align-self: start;
+    }
+
+    .instrument-window {
+      position: relative;
+      width: 100%;
+      min-height: clamp(390px, 62svh, 620px);
+      background: var(--card-bg);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      border: 1px solid var(--rule);
+      padding: 46px 34px 48px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      overflow: hidden;
+      isolation: isolate;
+    }
+
+    .field-grid {
+      position: absolute;
+      inset: 0;
+      z-index: -1;
+      background-image: radial-gradient(var(--rule) 0.9px, transparent 1px);
+      background-size: 22px 22px;
+      mask-image: radial-gradient(ellipse at center, #000 30%, transparent 78%);
+      -webkit-mask-image: radial-gradient(ellipse at center, #000 30%, transparent 78%);
+      opacity: 0.65;
+    }
+
+    .instrument-window::before,
+    .instrument-window::after {
+      content: "";
+      position: absolute;
+      width: 18px;
+      height: 18px;
+      border-color: var(--highlight);
+      border-style: solid;
+      pointer-events: none;
+    }
+
+    .instrument-window::before {
+      left: 10px;
+      top: 10px;
+      border-width: 1.5px 0 0 1.5px;
+    }
+
+    .instrument-window::after {
+      right: 10px;
+      bottom: 10px;
+      border-width: 0 1.5px 1.5px 0;
+    }
+
+    .instrument-legend {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      color: var(--sub);
+      margin-bottom: 18px;
+    }
+
+    .instrument-legend .tag-live {
+      color: var(--highlight);
+      display: inline-flex;
+      align-items: center;
+      gap: 7px;
+    }
+
+    .instrument-legend .tag-live::before {
+      content: "";
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: currentColor;
+    }
+
+    .instrument-readout {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      padding-top: 16px;
+      border-top: 1px solid var(--rule);
+      color: var(--sub);
+    }
+
+    .instrument-readout b {
+      color: var(--highlight);
+    }
+
+    /* Interactive Tabs inside Instrument */
+    .inst-tabs {
+      display: inline-flex;
+      gap: 6px;
+      background: rgba(0, 0, 0, 0.06);
+      padding: 4px;
       border-radius: 8px;
-      background: var(--bg-secondary);
-      border: 1px solid transparent;
-      transition: border-color 0.2s ease, background 0.2s ease;
+      border: 1px solid var(--rule);
     }
 
-    .ref-item:hover {
-      border-color: var(--border-strong);
-      background: var(--surface-solid);
+    .inst-tab {
+      font: 500 10px var(--mono);
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      padding: 5px 10px;
+      border-radius: 5px;
+      color: var(--sub);
+      transition: all 0.2s ease;
     }
 
-    .ref-num {
-      font-family: 'JetBrains Mono', monospace;
+    .inst-tab.active {
+      background: var(--highlight);
+      color: #FFF;
+    }
+
+    .study-learning .inst-tab.active {
+      color: #0E111A;
+    }
+
+    /* Beat List on Scroll Side */
+    .beat-list {
+      list-style: none;
+    }
+
+    .beat {
+      min-height: clamp(230px, 34svh, 350px);
+      padding: 32px 0 44px;
+      border-top: 1px solid var(--rule);
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      transition: opacity 0.3s ease;
+    }
+
+    .beat-code {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      color: var(--highlight);
+    }
+
+    .beat-code i {
+      width: 18px;
+      height: 1.5px;
+      background: var(--highlight);
+      transition: width 0.35s ease;
+    }
+
+    .beat.active .beat-code i {
+      width: 44px;
+    }
+
+    .beat h3 {
+      font-size: clamp(24px, 2.2vw, 31px);
+      font-weight: 530;
+      line-height: 1.15;
+      margin: 12px 0 12px;
+    }
+
+    .beat p {
+      font-size: 16px;
+      line-height: 1.65;
+      color: var(--sub);
+    }
+
+    /* Chart Bars Inside Instrument 01 */
+    .bar-chart-stage {
+      my: auto;
+      padding: 10px 0;
+    }
+
+    .chart-toggle-legend {
+      display: flex;
+      gap: 20px;
+      margin-bottom: 18px;
+      font-size: 12px;
+      color: var(--sub);
+    }
+
+    .chart-toggle-legend span {
+      display: inline-flex;
+      align-items: center;
+      gap: 7px;
+    }
+
+    .dot-2022 {
+      width: 12px;
+      height: 12px;
+      background: #8B9AA5;
+      display: inline-block;
+      border-radius: 2px;
+    }
+
+    .dot-2026 {
+      width: 12px;
+      height: 12px;
+      background: var(--highlight);
+      display: inline-block;
+      border-radius: 2px;
+    }
+
+    /* Interactive AI Usage Matrix Inside Instrument 02 */
+    .ai-mode-grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 10px;
+      margin: 14px 0;
+    }
+
+    .ai-mode-row {
+      display: grid;
+      grid-template-columns: 1fr auto auto;
+      align-items: center;
+      gap: 14px;
+      padding: 12px 16px;
+      border: 1px solid var(--rule);
+      border-radius: 8px;
+      background: rgba(255, 255, 255, 0.03);
+      transition: all 0.25s ease;
+      cursor: pointer;
+    }
+
+    .ai-mode-row:hover,
+    .ai-mode-row.highlighted {
+      border-color: var(--highlight);
+      background: rgba(255, 182, 129, 0.11);
+      transform: translateX(4px);
+    }
+
+    .ai-mode-name {
+      font-size: 14px;
+      font-weight: 500;
+      color: var(--s-ink);
+    }
+
+    .ai-mode-n {
+      font: 500 11px var(--mono);
+      color: var(--sub);
+    }
+
+    .ai-mode-badge {
+      font: 600 11.5px var(--mono);
+      padding: 4px 10px;
+      border-radius: 99px;
+    }
+
+    .badge-low {
+      background: rgba(239, 68, 68, 0.18);
+      color: #FCA5A5;
+      border: 1px solid rgba(239, 68, 68, 0.35);
+    }
+
+    .badge-high {
+      background: rgba(34, 197, 94, 0.18);
+      color: #86EFAC;
+      border: 1px solid rgba(34, 197, 94, 0.35);
+    }
+
+    /* Retest Decay Visualizer */
+    .decay-panel {
+      display: none;
+      margin: 18px 0;
+      gap: 20px;
+      flex-direction: column;
+    }
+
+    .decay-card {
+      padding: 18px 20px;
+      border: 1px solid var(--rule);
+      border-radius: 10px;
+      background: rgba(255, 255, 255, 0.03);
+    }
+
+    .decay-bar-track {
+      height: 10px;
+      background: rgba(255, 255, 255, 0.09);
+      border-radius: 99px;
+      margin-top: 10px;
+      overflow: hidden;
+    }
+
+    .decay-bar-fill {
+      height: 100%;
+      border-radius: 99px;
+      transition: width 0.6s cubic-bezier(0.22, 1, 0.36, 1);
+    }
+
+    /* ================= 3 RECOMMENDATIONS (STATION TRACK LAYOUT) ================= */
+    .service {
+      background: #151C25;
+      color: #E9EDF5;
+      --sub: #B8C2CC;
+      --rule: #33404D;
+      padding: 24px 0 92px;
+    }
+
+    .service-spread {
+      display: grid;
+      grid-template-columns: 0.85fr 1.15fr;
+      gap: clamp(32px, 6vw, 96px);
+      padding-top: 48px;
+      align-items: start;
+    }
+
+    .service-side {
+      position: sticky;
+      top: 100px;
+    }
+
+    .service-side .flight-kicker {
+      color: #9FC7CC;
+    }
+
+    .service-side h2 {
+      font-size: clamp(40px, 4.8vw, 66px);
+      font-weight: 480;
+      line-height: 1.03;
+      margin: 12px 0 18px;
+    }
+
+    .service-side h2 em {
+      font-family: var(--serif);
+      font-style: italic;
+      font-weight: 400;
+      color: #B4D7D2;
+    }
+
+    .service-side p {
+      font-size: 16.5px;
+      line-height: 1.62;
+      color: var(--sub);
+      margin-bottom: 24px;
+    }
+
+    .station {
+      display: grid;
+      grid-template-columns: 54px 1fr;
+      gap: 20px;
+      padding: 12px 0 46px;
+      position: relative;
+    }
+
+    .station-track {
+      position: relative;
+    }
+
+    .station-track::before {
+      content: "";
+      position: absolute;
+      left: 17px;
+      top: 36px;
+      height: calc(100% + 14px);
+      width: 1px;
+      background: #4A606A;
+    }
+
+    .station:last-child .station-track::before {
+      display: none;
+    }
+
+    .station-track span {
+      display: grid;
+      place-items: center;
+      font: 600 11px var(--mono);
+      width: 35px;
+      height: 35px;
+      border: 1px solid #74868C;
+      border-radius: 50%;
+      background: #151C25;
+      transition: all 0.25s ease;
+    }
+
+    .station:hover .station-track span,
+    .station.active .station-track span {
+      background: #B4D7D2;
+      color: #151C25;
+      border-color: #B4D7D2;
+      box-shadow: 0 0 18px rgba(180, 215, 210, 0.45);
+    }
+
+    .station-body {
+      background: rgba(255, 255, 255, 0.03);
+      border: 1px solid var(--rule);
+      border-radius: 12px;
+      padding: 28px 30px;
+      transition: border-color 0.25s ease, transform 0.25s ease;
+    }
+
+    .station:hover .station-body {
+      border-color: #9FC7CC;
+      transform: translateY(-2px);
+    }
+
+    .station-meta {
+      color: #9FC7CC;
+      margin-bottom: 8px;
+    }
+
+    .station h3 {
+      font-size: 26px;
+      font-weight: 530;
+      line-height: 1.18;
+      margin-bottom: 12px;
+      color: #FFF;
+    }
+
+    .station p {
+      font-size: 15.5px;
+      line-height: 1.65;
+      color: var(--sub);
+      margin-bottom: 16px;
+    }
+
+    .existing-anchor {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 7px 13px;
+      border-radius: 6px;
+      background: rgba(180, 215, 210, 0.11);
+      border: 1px solid rgba(180, 215, 210, 0.28);
+      color: #CFEAE6;
+      font: 500 11.5px var(--mono);
+    }
+
+    /* ================= INTERACTIVE APPENDIX B SIMULATOR + KEY FIGURES ================= */
+    .archive-section {
+      background: var(--paper);
+      padding: 24px 0 88px;
+    }
+
+    .archive-spread {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: clamp(32px, 5vw, 72px);
+      padding-top: 44px;
+      align-items: start;
+    }
+
+    .checkin-card {
+      background: rgba(28, 92, 120, 0.05);
+      border: 1px solid var(--line);
+      border-radius: 14px;
+      padding: 34px;
+    }
+
+    .checkin-card h3 {
+      font-size: 28px;
+      font-weight: 520;
+      margin: 8px 0 12px;
+    }
+
+    .q-list {
+      list-style: none;
+      margin: 20px 0 24px;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .q-item {
+      display: grid;
+      grid-template-columns: 30px 1fr;
+      gap: 10px;
+      align-items: center;
+      padding: 13px 16px;
+      background: var(--paper);
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      font-size: 14.5px;
+      font-weight: 500;
+    }
+
+    .q-num {
+      font: 600 11px var(--mono);
+      color: var(--accent);
+    }
+
+    .rating-sim {
+      margin-top: 22px;
+      padding-top: 20px;
+      border-top: 1px solid var(--line);
+    }
+
+    .rating-buttons {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin: 12px 0 14px;
+    }
+
+    .rate-btn {
+      font: 500 11.5px var(--mono);
+      padding: 8px 13px;
+      border-radius: 6px;
+      border: 1px solid var(--line);
+      background: var(--paper);
+      transition: all 0.2s ease;
+    }
+
+    .rate-btn.active {
+      background: var(--accent);
+      color: #FFF;
+      border-color: var(--accent);
+    }
+
+    .rate-outcome {
+      font-size: 14px;
+      color: var(--body);
+      padding: 13px 15px;
+      border-radius: 8px;
+      background: var(--paper);
+      border-left: 3px solid var(--accent);
+    }
+
+    /* Table II Compact Deck */
+    .figures-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 13.5px;
+      border: 1px solid var(--line);
+    }
+
+    .figures-table th,
+    .figures-table td {
+      padding: 11px 14px;
+      border-bottom: 1px solid var(--line);
+      text-align: left;
+    }
+
+    .figures-table th {
+      font: 600 10.5px var(--mono);
+      text-transform: uppercase;
+      color: var(--body);
+      background: rgba(28, 92, 120, 0.06);
+    }
+
+    .figures-table td:nth-child(2) {
+      font-family: var(--mono);
       font-weight: 600;
       color: var(--accent);
-      font-size: 0.84rem;
+      white-space: nowrap;
     }
 
-    .ref-text a {
-      color: var(--accent);
+    /* ================= FULL REPORT DRAWER / ACCORDION & REFERENCES ================= */
+    .downlink {
+      background: #0B1B36;
+      color: #FFF;
+      padding: 32px 0 84px;
+    }
+
+    .downlink .folio {
+      --rule: rgba(200, 228, 239, 0.22);
+      --sub: #A8C3DC;
+    }
+
+    .downlink-grid {
+      display: grid;
+      grid-template-columns: 0.9fr 1.1fr;
+      gap: clamp(32px, 6vw, 88px);
+      padding-top: 48px;
+    }
+
+    .downlink h2 {
+      font-size: clamp(38px, 4.5vw, 62px);
+      font-weight: 480;
+      line-height: 1.04;
+      margin: 12px 0 22px;
+    }
+
+    .downlink h2 em {
+      font-family: var(--serif);
+      font-style: italic;
+      color: #86EDF4;
+    }
+
+    .transmittal-box {
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid rgba(200, 228, 239, 0.22);
+      border-radius: 12px;
+      padding: 24px 26px;
+      font-size: 14.5px;
+      color: #D4E2F0;
+      line-height: 1.62;
+    }
+
+    .transmittal-meta {
+      display: grid;
+      grid-template-columns: 82px 1fr;
+      gap: 6px 12px;
+      padding-bottom: 16px;
+      margin-bottom: 16px;
+      border-bottom: 1px solid rgba(200, 228, 239, 0.18);
+      font-size: 12.5px;
+    }
+
+    .transmittal-meta span:nth-child(odd) {
+      font-family: var(--mono);
+      color: #86EDF4;
+    }
+
+    .ref-accordion {
+      border-top: 1px solid rgba(200, 228, 239, 0.22);
+    }
+
+    details.drawer {
+      border-bottom: 1px solid rgba(200, 228, 239, 0.22);
+      padding: 18px 0;
+    }
+
+    details.drawer summary {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      cursor: pointer;
+      font-size: 18px;
+      font-weight: 530;
+      list-style: none;
+    }
+
+    details.drawer summary::-webkit-details-marker {
+      display: none;
+    }
+
+    .drawer-body {
+      padding-top: 16px;
+      font-size: 14.5px;
+      line-height: 1.65;
+      color: #C7D7E8;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .drawer-body a {
+      color: #86EDF4;
       text-decoration: underline;
-      text-underline-offset: 3px;
-      word-break: break-all;
     }
 
-    /* Responsive adjustments */
-    @media (max-width: 1060px) {
-      .layout-wrapper {
-        grid-template-columns: 1fr;
-        padding: 88px 20px 80px;
+    @media (max-width: 980px) {
+      .desktop-nav {
+        display: none;
       }
-      .sidebar-nav {
+      .prelude-line,
+      .study-spread,
+      .study-learning .study-spread,
+      .service-spread,
+      .archive-spread,
+      .downlink-grid {
+        grid-template-columns: 1fr;
+      }
+      .study-learning .study-visual,
+      .study-learning .beat-list {
+        grid-column: auto;
+        grid-row: auto;
+      }
+      .study-visual,
+      .service-side {
         position: relative;
         top: 0;
-        max-height: none;
       }
-      .card-3d {
-        padding: 30px 24px;
+      .kpi-strip {
+        grid-template-columns: 1fr 1fr;
       }
-      .hero-title {
-        font-size: 2.3rem;
-      }
-      .cover-meta-grid {
+    }
+
+    @media (max-width: 580px) {
+      .kpi-strip {
         grid-template-columns: 1fr;
       }
     }
@@ -667,412 +1257,582 @@
 </head>
 <body>
 
-  <!-- 3D Minimalist Background Scene -->
-  <canvas id="canvas-3d"></canvas>
+  <!-- ================= FLOATING PILL NAVIGATION ================= -->
+  <header class="site-head">
+    <div class="head-inner">
+      <a href="#top" class="brand-pill">
+        <span class="brand-mark"></span>
+        <span>LR / Waterloo ECE Co-op Study</span>
+      </a>
 
-  <!-- Fixed Minimal Top Header -->
-  <header class="top-bar">
-    <div class="brand-title">
-      <span class="brand-dot"></span>
-      <span>COMMST 192 • University of Waterloo • ECE</span>
-    </div>
-    <div class="top-controls">
-      <button class="mode-btn" id="toggle-3d-btn" type="button">3D Tilt: Active</button>
+      <nav class="desktop-nav" aria-label="Primary Navigation">
+        <a href="#thesis" class="active">01 / Thesis</a>
+        <a href="#hiring">02 / Hiring Data</a>
+        <a href="#learning">03 / Learning Gap</a>
+        <a href="#recommendations">04 / 3 Actions</a>
+        <a href="#framework">05 / Check-In Guide</a>
+        <a href="#archive">06 / Full Report &amp; Sources</a>
+      </nav>
+
+      <div class="head-actions">
+        <button type="button" class="theme-btn" id="theme-toggle">Night Mode</button>
+      </div>
     </div>
   </header>
-  <div class="progress-track">
-    <div class="progress-fill" id="scroll-progress"></div>
-  </div>
 
-  <!-- Main Workspace Layout -->
-  <div class="layout-wrapper">
+  <!-- ================= FULL-SCREEN 3D ORBITAL HERO ================= -->
+  <section class="flight-opening" id="top">
+    <canvas id="hero-canvas"></canvas>
+    <div class="opening-scrim"></div>
 
-    <!-- Left Navigation Sidebar -->
-    <aside class="sidebar-nav" aria-label="Document Navigation">
-      <div class="sidebar-label">Document Structure</div>
-      <ul class="nav-list">
-        <li><a class="nav-link active" href="#transmittal">Letter of Transmittal</a></li>
-        <li><a class="nav-link" href="#cover">Title &amp; Front Matter</a></li>
-        <li><a class="nav-link" href="#exec-summary">I. Executive Summary</a></li>
-        <li><a class="nav-link" href="#recommendations">II. Recommendations</a></li>
-        <li><a class="nav-link nav-sub" href="#rec-a">A. Design Course Pilot</a></li>
-        <li><a class="nav-link nav-sub" href="#rec-b">B. Co-op Learning Check-In</a></li>
-        <li><a class="nav-link nav-sub" href="#rec-c">C. Track ECE Co-op Outcomes</a></li>
-        <li><a class="nav-link" href="#introduction">III. Introduction</a></li>
-        <li><a class="nav-link" href="#methods">IV. Methods</a></li>
-        <li><a class="nav-link" href="#results">V. Results</a></li>
-        <li><a class="nav-link nav-sub" href="#res-a">A. Entry-Level Hiring</a></li>
-        <li><a class="nav-link nav-sub" href="#res-b">B. Output vs. Learning</a></li>
-        <li><a class="nav-link nav-sub" href="#res-c">C. Student Experience</a></li>
-        <li><a class="nav-link nav-sub" href="#res-d">D. Existing Waterloo Systems</a></li>
-        <li><a class="nav-link nav-sub" href="#res-e">E. Possible Obstacles</a></li>
-        <li><a class="nav-link" href="#discussion">VI. Discussion</a></li>
-        <li><a class="nav-link" href="#conclusion">VII. Conclusion</a></li>
-        <li><a class="nav-link" href="#references">References</a></li>
-        <li><a class="nav-link" href="#appendix-a">Appendix A: Key Figures</a></li>
-        <li><a class="nav-link" href="#appendix-b">Appendix B: Check-In Guide</a></li>
-      </ul>
-    </aside>
+    <div class="opening-registration microtype">
+      <span>ECE • COMMST 192</span>
+      <i></i>
+      <span>To: Prof. Mahesh Tripunitara • Nov 2026</span>
+    </div>
 
-    <!-- Right Content Stream (100% Verbatim DOCX Content) -->
-    <main class="content-stream">
+    <div class="opening-fig microtype">
+      <i></i>
+      <span>Interactive Visual Argument / Fig. 00</span>
+    </div>
 
-      <!-- Letter of Transmittal -->
-      <section class="card-3d" id="transmittal">
-        <span class="section-tag">Letter of Transmittal</span>
-        <div class="memo-grid">
-          <div class="memo-label">TO:</div>
-          <div class="memo-value">Prof. Mahesh Tripunitara, Associate Chair for Undergraduate Studies, Department of Electrical and Computer Engineering, University of Waterloo</div>
-          <div class="memo-label">FROM:</div>
-          <div class="memo-value">Lakshmanan Ramanathan, Computer Engineering Student</div>
-          <div class="memo-label">DATE:</div>
-          <div class="memo-value">November 18, 2026</div>
-          <div class="memo-label">SUBJECT:</div>
-          <div class="memo-value">A recommendation report on protecting the learning value of co-op in the time of generative AI</div>
+    <div class="opening-ident">
+      <span class="flight-kicker microtype"><i></i> Recommendation Report • University of Waterloo</span>
+      <h1>Protecting the <em>Learning Value</em> of Co-op in the Age of AI</h1>
+      <div class="opening-sub">
+        <p>
+          If agentic tools now handle most of the tasks once given to junior engineers, how can ECE make sure co-op remains a place where students learn?
+          <br><strong>By Lakshmanan Ramanathan • Computer Engineering</strong>
+        </p>
+        <a href="#thesis" class="orbit-link">
+          <span>Explore the Evidence</span>
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M12 5v14M19 12l-7 7-7-7"/>
+          </svg>
+        </a>
+      </div>
+    </div>
+
+    <div class="opening-bottom microtype">
+      <span>Prepared for Associate Chair for Undergraduate Studies, ECE</span>
+      <span>6 Published Studies • 4 Capstone Student Interviews • First-Year Backend Co-op Experience</span>
+    </div>
+  </section>
+
+  <!-- ================= 01 / THE CORE THESIS & KPI STRIP ================= -->
+  <section class="prelude" id="thesis">
+    <div class="bound">
+      <div class="folio microtype">
+        <span>01 / The Core Problem</span>
+        <span>24 Months of Co-op Experience at Stake [10]</span>
+      </div>
+
+      <div class="prelude-line">
+        <div class="gyro-ring">
+          <svg id="gyro-svg" viewBox="0 0 120 120" fill="none" stroke="currentColor" stroke-width="1.3">
+            <circle cx="60" cy="60" r="52" stroke-dasharray="4 4"/>
+            <ellipse cx="60" cy="60" rx="52" ry="22" transform="rotate(28 60 60)"/>
+            <ellipse cx="60" cy="60" rx="52" ry="22" transform="rotate(-28 60 60)"/>
+            <circle cx="60" cy="60" r="6" fill="currentColor"/>
+          </svg>
         </div>
 
-        <p>Attached below is my report on how generative AI may be changing the entry-level work that co-op students at Waterloo rely on to build work experience, and recommendations that your office could investigate implementing to make us more prepared for an age of AI.</p>
-        <p>This report tackles one question. If agentic tools now handle most of the tasks once given to junior engineers, how can ECE make sure co-op remains a place where students learn? To answer this, I conducted my own research and reviewed recent labor market data (finding both positive and negative results) and learning research alongside insights from my own experience and upper-year students who have gone through multiple co-op terms. While the broader impact on entry-level hiring is still actively unfolding, the research consistently shows that students using AI are directly impacted in how they retain and learn knowledge.</p>
-        <p>To address this risk, the report recommends three ways that could be implemented to protect students’ learning regardless of how the entry-level job market evolves, which are to teach and assess AI use in design courses, add a learning check-in and reflection to co-op work terms, and better track ECE-specific co-op outcomes from employers.</p>
-        <p>The report is mainly shaped around six published sources, my work experience, and the experiences of upper-year students whose identities are withheld at their request. I would welcome your feedback, and hope for your consideration in implementing measures to address this problem. Thank you for your time.</p>
+        <h2 class="manifesto">
+          Engineers become senior by doing <em>junior work</em>. When agentic AI takes over first drafts, bug fixes, and tests, co-op risks producing <em>output without engineering judgment</em>.
+        </h2>
+      </div>
 
-        <div class="signature-block">
-          <p>Sincerely,</p>
-          <p><strong>Lakshmanan Ramanathan</strong></p>
-          <div class="enclosure">Encl.: Recommendation report (with appendixes and references)</div>
+      <div class="kpi-strip">
+        <div class="kpi-cell">
+          <div class="microtype">Learning Penalty [3]</div>
+          <div class="kpi-num">−17<span>%</span></div>
+          <div class="kpi-label">Lower follow-up quiz score (4.15 pts out of 27) when programmers used AI to learn a new Python library, unless asking conceptual questions.</div>
         </div>
-      </section>
+        <div class="kpi-cell">
+          <div class="microtype">1-Week Retest Drop [4]</div>
+          <div class="kpi-num">−21<span>pts</span></div>
+          <div class="kpi-label">Score drop when novices were retested alone 1 week after learning with GitHub Copilot, versus only −3 points after working with a human partner.</div>
+        </div>
+        <div class="kpi-cell">
+          <div class="microtype">Canadian Coding Hiring [2]</div>
+          <div class="kpi-num">1.9<span>%</span></div>
+          <div class="kpi-label">Youth (15–29) monthly hiring rate in coding-intensive jobs—the lowest of all occupation groups, down from a 15-year high of 5.8% in late 2021.</div>
+        </div>
+        <div class="kpi-cell">
+          <div class="microtype">U.S. Entry-Level Gap [1]</div>
+          <div class="kpi-num">−19<span>%</span></div>
+          <div class="kpi-label">Employment of 22- to 25-year-olds in the most AI-exposed occupations relative to trend by June 2026 (widened from 15% a year earlier).</div>
+        </div>
+      </div>
+    </div>
+  </section>
 
-      <!-- Cover / Title Block -->
-      <section class="card-3d" id="cover">
-        <span class="section-tag">Formal Report</span>
-        <h1 class="hero-title">Protecting the Learning Value of Co-op in the Time of Generative AI</h1>
+  <!-- ================= 02 / CHAPTER I: ENTRY-LEVEL HIRING IS SHRINKING ================= -->
+  <section class="study study-hiring" id="hiring">
+    <div class="bound">
+      <div class="folio microtype">
+        <span>02 / Labor Market Evidence</span>
+        <span>Stanford ADP Payroll Study [1] • Statistics Canada [2] • WEF [6]</span>
+      </div>
 
-        <div class="cover-meta-grid">
-          <div class="meta-box">
-            <div class="meta-box-label">Prepared for / To</div>
-            <div class="meta-box-content">
-              <strong>Prof. Mahesh Tripunitara</strong><br>
-              Associate Chair for Undergraduate Studies, Department of Electrical and Computer Engineering (ECE)<br>
-              University of Waterloo, Waterloo, ON
+      <div class="study-title">
+        <div>
+          <span class="flight-kicker microtype"><i></i> Finding A • The Narrowing Pathway</span>
+          <h2>Entry-level hiring is <em>shrinking</em></h2>
+        </div>
+        <p>Fewer entry-level openings and far more competition for each co-op role across North America.</p>
+      </div>
+
+      <div class="study-spread">
+        <!-- Sticky Interactive Figure 1 Instrument -->
+        <div class="study-visual">
+          <div class="instrument-window">
+            <div class="field-grid"></div>
+
+            <div class="instrument-legend microtype">
+              <span class="tag-live">Fig. 1 • Statistics Canada Youth (15–29) Hiring Rates [2]</span>
+              <div class="inst-tabs">
+                <button type="button" class="inst-tab active" data-chart-view="ca">Canada (Fig. 1)</button>
+                <button type="button" class="inst-tab" data-chart-view="us">U.S. Ages 22–25 [1]</button>
+              </div>
+            </div>
+
+            <!-- View 1: Statistics Canada Figure 1 -->
+            <div class="bar-chart-stage" id="chart-ca">
+              <div class="chart-toggle-legend">
+                <span><i class="dot-2022"></i> 6 months before Nov. 2022</span>
+                <span><i class="dot-2026"></i> 6 months before Aug. 2026</span>
+              </div>
+              <svg viewBox="0 0 640 300" width="100%" height="auto" role="img" aria-label="Fig. 1. Youth (15 to 29) monthly hiring rates in Canada by AI exposure group">
+                <line x1="56" y1="20" x2="56" y2="230" stroke="currentColor" stroke-width="1.5"/>
+                <text x="44" y="25" text-anchor="end" font-family="JetBrains Mono" font-size="12" fill="currentColor">5%</text>
+                <text x="44" y="67" text-anchor="end" font-family="JetBrains Mono" font-size="12" fill="currentColor">4%</text>
+                <text x="44" y="109" text-anchor="end" font-family="JetBrains Mono" font-size="12" fill="currentColor">3%</text>
+                <text x="44" y="151" text-anchor="end" font-family="JetBrains Mono" font-size="12" fill="currentColor">2%</text>
+                <text x="44" y="193" text-anchor="end" font-family="JetBrains Mono" font-size="12" fill="currentColor">1%</text>
+                <text x="44" y="235" text-anchor="end" font-family="JetBrains Mono" font-size="12" fill="currentColor">0%</text>
+
+                <!-- Group 1: High exposure, high compl. (2.9 -> 2.5) -->
+                <rect x="88" y="108.2" width="42" height="121.8" fill="#8B9AA5" rx="3"/>
+                <text x="109" y="101" text-anchor="middle" font-family="JetBrains Mono" font-size="12" font-weight="600" fill="currentColor">2.9</text>
+                <rect x="132" y="125" width="42" height="105" fill="#1C6D66" rx="3"/>
+                <text x="153" y="118" text-anchor="middle" font-family="JetBrains Mono" font-size="12" font-weight="600" fill="currentColor">2.5</text>
+                <text x="131" y="254" text-anchor="middle" font-size="11.5" fill="currentColor">High exposure,</text>
+                <text x="131" y="270" text-anchor="middle" font-size="11.5" fill="currentColor">high compl.</text>
+
+                <!-- Group 2: High exposure, less compl. (3.2 -> 3.0) -->
+                <rect x="228" y="95.6" width="42" height="134.4" fill="#8B9AA5" rx="3"/>
+                <text x="249" y="88" text-anchor="middle" font-family="JetBrains Mono" font-size="12" font-weight="600" fill="currentColor">3.2</text>
+                <rect x="272" y="104" width="42" height="126" fill="#1C6D66" rx="3"/>
+                <text x="293" y="97" text-anchor="middle" font-family="JetBrains Mono" font-size="12" font-weight="600" fill="currentColor">3.0</text>
+                <text x="271" y="254" text-anchor="middle" font-size="11.5" fill="currentColor">High exposure,</text>
+                <text x="271" y="270" text-anchor="middle" font-size="11.5" fill="currentColor">less compl.</text>
+
+                <!-- Group 3: Less exposed (4.0 -> 3.3) -->
+                <rect x="368" y="62" width="42" height="168" fill="#8B9AA5" rx="3"/>
+                <text x="389" y="55" text-anchor="middle" font-family="JetBrains Mono" font-size="12" font-weight="600" fill="currentColor">4.0</text>
+                <rect x="412" y="91.4" width="42" height="138.6" fill="#1C6D66" rx="3"/>
+                <text x="433" y="84" text-anchor="middle" font-family="JetBrains Mono" font-size="12" font-weight="600" fill="currentColor">3.3</text>
+                <text x="411" y="254" text-anchor="middle" font-size="11.5" fill="currentColor">Less</text>
+                <text x="411" y="270" text-anchor="middle" font-size="11.5" fill="currentColor">exposed</text>
+
+                <!-- Group 4: Coding-intensive (2.5 -> 1.9) -->
+                <rect x="508" y="125" width="42" height="105" fill="#8B9AA5" rx="3"/>
+                <text x="529" y="118" text-anchor="middle" font-family="JetBrains Mono" font-size="12" font-weight="600" fill="currentColor">2.5</text>
+                <rect x="552" y="150.2" width="42" height="79.8" fill="#1C6D66" rx="3"/>
+                <text x="573" y="143" text-anchor="middle" font-family="JetBrains Mono" font-size="12" font-weight="600" fill="currentColor">1.9</text>
+                <text x="551" y="254" text-anchor="middle" font-size="11.5" font-weight="600" fill="currentColor">Coding-</text>
+                <text x="551" y="270" text-anchor="middle" font-size="11.5" font-weight="600" fill="currentColor">intensive</text>
+
+                <line x1="56" y1="230" x2="620" y2="230" stroke="currentColor" stroke-width="1.5"/>
+              </svg>
+            </div>
+
+            <!-- View 2: Stanford U.S. Data (Nov 2022 – June 2026) -->
+            <div class="bar-chart-stage" id="chart-us" style="display:none;">
+              <div style="display:grid; grid-template-columns:1fr 1fr; gap:16px; margin: 12px 0;">
+                <div style="padding:22px; border:1px solid var(--rule); border-radius:10px;">
+                  <div class="microtype">Most AI-Exposed Jobs (Ages 22–25)</div>
+                  <div style="font-family:var(--serif); font-size:54px; color:#C2410C; line-height:1; margin:10px 0;">−11%</div>
+                  <p style="font-size:13.5px; color:var(--sub);">Employment change between Nov. 2022 and June 2026 in software &amp; high-exposure roles [1].</p>
+                </div>
+                <div style="padding:22px; border:1px solid var(--rule); border-radius:10px;">
+                  <div class="microtype">Least AI-Exposed Jobs (Ages 22–25)</div>
+                  <div style="font-family:var(--serif); font-size:54px; color:var(--highlight); line-height:1; margin:10px 0;">+10%</div>
+                  <p style="font-size:13.5px; color:var(--sub);">Employment growth over the exact same period in least-exposed occupations [1].</p>
+                </div>
+              </div>
+              <div style="padding:18px 20px; border:1px solid var(--rule); border-radius:10px;">
+                <div class="microtype">Trend Divergence (June 2026 vs. 1 Year Prior)</div>
+                <p style="font-size:14.5px; margin-top:6px; color:var(--s-ink);">
+                  Youth employment (ages 22–25) in the most AI-exposed occupations sits <strong>≈19% below trend</strong> (widened from <strong>≈15%</strong> just one year earlier), driven by hiring fewer young workers rather than layoffs [1].
+                </p>
+              </div>
+            </div>
+
+            <div class="instrument-readout microtype">
+              <span>Coding-Intensive Youth Hiring: <b>2.5% → 1.9%</b> (15-Yr High: 5.8% in Late 2021)</span>
+              <span>Data Cutoff: Nov 18, 2026</span>
             </div>
           </div>
-          <div class="meta-box">
-            <div class="meta-box-label">Drafted / Prepared by</div>
-            <div class="meta-box-content">
-              <strong>Lakshmanan Ramanathan</strong><br>
-              Computer Engineering<br>
-              University of Waterloo, Waterloo, ON
-            </div>
-          </div>
         </div>
 
-        <div class="course-banner">
-          <span>COMMST 192, Engineering Communication (Instructor: Prof. Kate Wells)</span>
-          <span>November 19, 2026</span>
-        </div>
-      </section>
-
-      <!-- I. Executive Summary -->
-      <section class="card-3d" id="exec-summary">
-        <span class="section-tag">Section I</span>
-        <h2 class="section-heading">I. Executive Summary</h2>
-        <p>Generative AI is changing the work given to junior engineers, though its effect on entry-level hiring is still early and uneven across North America. Its effect on learning is much clearer. In a controlled experiment, programmers who used AI to learn a new coding library scored about 17% lower on a follow-up quiz than those who worked without it, unless they used AI only to ask conceptual questions. Since co-op is where ECE students build their engineering judgment, the core risk is not just fewer co-op roles, but a shallower learning experience in the roles students do get. This report recommends three actions that can protect students’ development regardless of how the job market shifts:</p>
-        <ul class="clean-list">
-          <li>Teach and assess responsible AI use in design courses.</li>
-          <li>Add a short learning check-in to co-op work terms, run by the employer.</li>
-          <li>Track ECE-specific co-op outcomes to see how these trends affect Waterloo students.</li>
-        </ul>
-      </section>
-
-      <!-- II. Recommendations -->
-      <section class="card-3d" id="recommendations">
-        <span class="section-tag">Section II</span>
-        <h2 class="section-heading">II. Recommendations</h2>
-
-        <h3 class="sub-heading" id="rec-a">A. Teach and assess AI use in a design course as a pilot</h3>
-        <p>Pilot a structured AI framework in one second-year ECE design course next term that permits students to use AI freely and completely while requiring them to document and justify why AI was appropriate for specific tasks. Allow repetitive tasks to be done completely by AI if the decision-making process and architecture are understood by the student. Pair this with short no-AI debugging checks and sample oral defenses so students must independently explain and extend their work. Instructors should explicitly train students to ask conceptual questions instead of generating finished code, since controlled experiments show that conceptual questions still preserve learning, while fully passing the task to AI creates severe gaps in comprehension [3]. Every Waterloo course outline already has to state a generative AI policy [7], so this pilot builds on a step instructors already take.</p>
-
-        <h3 class="sub-heading" id="rec-b">B. Add a short learning check-in to co-op work terms</h3>
-        <p>Partner with Waterloo’s Co-operative and Experiential Education office to introduce a brief midterm check-in structured around expectations set by the student’s supervisor. This would be a check-in that all employers on WaterlooWorks must agree to provide when hiring ECE students, where they assess their students’ technical growth and design decisions on the job. Waterloo already recommends an informal mid-term evaluation [8], so this turns an existing suggestion into a requirement. It will also allow students to further reflect on their understanding of what they learned during the co-op experience. The faculty must also provide employers with a one-page onboarding guide (Appendix B), making it easier for employers to run the check-in without added administrative burden. Since AI increases short-term junior output significantly [4], [5], employers have little immediate incentive to prioritize deep skill retention unless the faculty makes it a condition of hiring from Waterloo’s ECE cohort.</p>
-
-        <h3 class="sub-heading" id="rec-c">C. Track ECE-specific co-op outcomes</h3>
-        <p>Have ECE faculty staff collect anonymous aggregated data at the end of each work term on placement rates, role responsibilities, and student-reported AI reliance on their work terms, using a few added questions in the Rate My Work Term survey students already complete [9]. Along with this information, review the results of the employer check-ins from Recommendation B to see how well students retain what they learned. Because national labor statistics group occupations broadly [2] instead of isolating engineering disciplines, longitudinal internal tracking will give the department reliable evidence on whether entry-level ECE work and hiring is shifting at Waterloo, as I found with other sources [1], [2].</p>
-      </section>
-
-      <!-- III. Introduction -->
-      <section class="card-3d" id="introduction">
-        <span class="section-tag">Section III</span>
-        <h2 class="section-heading">III. Introduction</h2>
-        <p>I am Lakshmanan Ramanathan, a first-year Computer Engineering student at the University of Waterloo, and this past summer I worked as a junior backend developer. Notably, during that internship AI was capable of doing everything I did on the job, which hindered my learning experience since my employer preferred using AI as it produced working code much faster. This directly affects me and many of my classmates in ECE, which is why I decided to research this problem.</p>
-        <p>Engineers become senior by doing and progressing through junior work, where they learn to write first drafts of simple repetitive code, fix small bugs, run different tests and document simple and segmented systems. These tasks are given to students because they are low risk, but they are also how junior engineers learn to read a codebase and make their own design decisions. With the explosive growth of agentic AI tools, which can plan and carry out multi-step coding tasks with very little human input, a large amount of this work is now being done by AI instead of by students. This creates two problems for Waterloo ECE students: fewer entry-level roles and less learning in the roles students do get. This report mainly focuses on the second problem since it affects every student who goes on a work term.</p>
-        <p>This also matters directly to our Waterloo community, since our students graduate with up to 24 months of paid work experience from four to six co-op terms [10]. Our advantage has always been that we graduate with real experience compared to other students, and that depends on employers giving students real work and on us actually learning on the job.</p>
-      </section>
-
-      <!-- IV. Methods -->
-      <section class="card-3d" id="methods">
-        <span class="section-tag">Section IV</span>
-        <h2 class="section-heading">IV. Methods</h2>
-        <p>This project is a literature review supported by student conversations, shaped around the 3 questions from my proposal on hiring, learning, and how Waterloo could respond.</p>
-        <p>For the hiring question, my strongest source was the August 2026 revision of Stanford’s “Canaries in the Coal Mine?” paper [1], which uses ADP payroll records for millions of U.S. workers and has been updated through June 2026. Since the Stanford data is American, I paired it with Statistics Canada’s October 2026 study on hiring rates [2], which uses Labour Force Survey data from 2006 to August 2026, to test whether the patterns hold true in Canada. I also used the World Economic Forum’s Future of Jobs Report 2025 [6] to see what employers are planning for the future.</p>
-        <p>For the learning question, I searched arXiv, Google Scholar and the ACM Digital Library through the University of Waterloo Library for controlled studies that test novices after they work with an AI assistant, instead of only measuring how fast they finish. I selected Shen and Tamkin’s randomized experiment with 52 developers [3] and Gardella et al.’s study of 22 novices who were retested one week later [4]. I also used Brynjolfsson, Li and Raymond’s study [5] to understand why employers adopt AI for junior staff.</p>
-        <p>To address the education question, I spoke with four upper-year ECE students who are completing their capstone projects about their co-op experiences, and since they asked to stay anonymous I refer to them as Students A to D. I originally planned to interview professors who teach design courses, but since they were not available in time, I used public course outlines such as ECE 198 [11] along with Waterloo’s course outline requirements [7] and the co-op evaluation process [8], [9] instead. Since Stanford and other sources post updates monthly, I set a data cutoff of November 18, 2026.</p>
-      </section>
-
-      <!-- V. Results -->
-      <section class="card-3d" id="results">
-        <span class="section-tag">Section V</span>
-        <h2 class="section-heading">V. Results</h2>
-
-        <h3 class="sub-heading" id="res-a">A. Entry-level hiring is shrinking</h3>
-        <p>The evidence I gathered on hiring is recent and measurable. Stanford researchers found that the employment of 22- to 25-year-olds in the most AI-exposed occupations, such as software development, is about 19% below where it would be had it kept pace with less-exposed occupations, and the gap was 15% just a year earlier [1]. Between November 2022 and June 2026, employment for this group fell about 11% in the most exposed jobs, while it grew about 10% in the least exposed jobs [1]. This drop comes mainly from employers hiring fewer young workers rather than laying them off, and it is concentrated in jobs where AI is used to automate tasks, while experienced workers are not impacted by much [1].</p>
-        <p>In Canada, Statistics Canada found that youth (15 to 29) hiring rates have fallen in every occupation group, including the jobs least exposed to AI (Fig. 1) [2]. Coding-intensive jobs, which are the closest group to ECE co-op roles, now have the lowest youth hiring rate of all the groups measured at 1.9%, which is a drastic drop from a 15-year high of 5.8% in late 2021 [2]. Although Statistics Canada does not directly blame AI for the overall slowdown yet [2], the result for students is still the same, which is fewer entry-level openings and much more competition for each one. Employers also plan for this to continue, as 40% of employers surveyed by the World Economic Forum plan to reduce their workforce in areas where AI can automate tasks [6].</p>
-
-        <!-- Figure 1 Vector Chart reproducing exact image data from the docx -->
-        <div class="figure-box" aria-label="Figure 1 chart">
-          <div class="chart-legend">
-            <div class="legend-item">
-              <span class="swatch-before"></span>
-              <span>6 months before Nov. 2022</span>
-            </div>
-            <div class="legend-item">
-              <span class="swatch-after"></span>
-              <span>6 months before Aug. 2026</span>
-            </div>
-          </div>
-
-          <div class="svg-chart-wrap">
-            <svg viewBox="0 0 680 340" width="100%" height="auto" role="img" aria-label="Youth (15 to 29) monthly hiring rates in Canada by AI exposure group">
-              <!-- Y-Axis Label -->
-              <text x="-150" y="22" transform="rotate(-90)" text-anchor="middle" font-family="Instrument Serif, Georgia, serif" font-size="17" fill="#111315">Monthly hiring rate (%)</text>
-
-              <!-- Y-Axis Line & Ticks (0 to 5) -->
-              <line x1="78" y1="25" x2="78" y2="265" stroke="#111315" stroke-width="2" />
-              <!-- 5% -->
-              <line x1="70" y1="25" x2="78" y2="25" stroke="#111315" stroke-width="2" />
-              <text x="62" y="30" text-anchor="end" font-family="Inter, sans-serif" font-size="14" fill="#111315">5</text>
-              <!-- 4% -->
-              <line x1="70" y1="73" x2="78" y2="73" stroke="#111315" stroke-width="2" />
-              <text x="62" y="78" text-anchor="end" font-family="Inter, sans-serif" font-size="14" fill="#111315">4</text>
-              <!-- 3% -->
-              <line x1="70" y1="121" x2="78" y2="121" stroke="#111315" stroke-width="2" />
-              <text x="62" y="126" text-anchor="end" font-family="Inter, sans-serif" font-size="14" fill="#111315">3</text>
-              <!-- 2% -->
-              <line x1="70" y1="169" x2="78" y2="169" stroke="#111315" stroke-width="2" />
-              <text x="62" y="174" text-anchor="end" font-family="Inter, sans-serif" font-size="14" fill="#111315">2</text>
-              <!-- 1% -->
-              <line x1="70" y1="217" x2="78" y2="217" stroke="#111315" stroke-width="2" />
-              <text x="62" y="222" text-anchor="end" font-family="Inter, sans-serif" font-size="14" fill="#111315">1</text>
-              <!-- 0% -->
-              <line x1="70" y1="265" x2="78" y2="265" stroke="#111315" stroke-width="2" />
-              <text x="62" y="270" text-anchor="end" font-family="Inter, sans-serif" font-size="14" fill="#111315">0</text>
-
-              <!-- Group 1: High exposure, high compl. (2.9 vs 2.5) -->
-              <rect x="115" y="125.8" width="48" height="139.2" fill="#94A0AC" rx="2" />
-              <text x="139" y="119" text-anchor="middle" font-family="JetBrains Mono, monospace" font-size="13" fill="#111315">2.9</text>
-              <rect x="163" y="145" width="48" height="120" fill="#183052" rx="2" />
-              <text x="187" y="138" text-anchor="middle" font-family="JetBrains Mono, monospace" font-size="13" fill="#111315">2.5</text>
-              <line x1="163" y1="265" x2="163" y2="273" stroke="#111315" stroke-width="2" />
-              <text x="163" y="292" text-anchor="middle" font-family="Inter, sans-serif" font-size="12.5" fill="#111315">High exposure,</text>
-              <text x="163" y="309" text-anchor="middle" font-family="Inter, sans-serif" font-size="12.5" fill="#111315">high compl.</text>
-
-              <!-- Group 2: High exposure, less compl. (3.2 vs 3.0) -->
-              <rect x="255" y="111.4" width="48" height="153.6" fill="#94A0AC" rx="2" />
-              <text x="279" y="105" text-anchor="middle" font-family="JetBrains Mono, monospace" font-size="13" fill="#111315">3.2</text>
-              <rect x="303" y="121" width="48" height="144" fill="#183052" rx="2" />
-              <text x="327" y="114" text-anchor="middle" font-family="JetBrains Mono, monospace" font-size="13" fill="#111315">3.0</text>
-              <line x1="303" y1="265" x2="303" y2="273" stroke="#111315" stroke-width="2" />
-              <text x="303" y="292" text-anchor="middle" font-family="Inter, sans-serif" font-size="12.5" fill="#111315">High exposure,</text>
-              <text x="303" y="309" text-anchor="middle" font-family="Inter, sans-serif" font-size="12.5" fill="#111315">less compl.</text>
-
-              <!-- Group 3: Less exposed (4.0 vs 3.3) -->
-              <rect x="395" y="73" width="48" height="192" fill="#94A0AC" rx="2" />
-              <text x="419" y="66" text-anchor="middle" font-family="JetBrains Mono, monospace" font-size="13" fill="#111315">4.0</text>
-              <rect x="443" y="106.6" width="48" height="158.4" fill="#183052" rx="2" />
-              <text x="467" y="100" text-anchor="middle" font-family="JetBrains Mono, monospace" font-size="13" fill="#111315">3.3</text>
-              <line x1="443" y1="265" x2="443" y2="273" stroke="#111315" stroke-width="2" />
-              <text x="443" y="292" text-anchor="middle" font-family="Inter, sans-serif" font-size="12.5" fill="#111315">Less</text>
-              <text x="443" y="309" text-anchor="middle" font-family="Inter, sans-serif" font-size="12.5" fill="#111315">exposed</text>
-
-              <!-- Group 4: Coding-intensive (2.5 vs 1.9) -->
-              <rect x="535" y="145" width="48" height="120" fill="#94A0AC" rx="2" />
-              <text x="559" y="138" text-anchor="middle" font-family="JetBrains Mono, monospace" font-size="13" fill="#111315">2.5</text>
-              <rect x="583" y="173.8" width="48" height="91.2" fill="#183052" rx="2" />
-              <text x="607" y="167" text-anchor="middle" font-family="JetBrains Mono, monospace" font-size="13" fill="#111315">1.9</text>
-              <line x1="583" y1="265" x2="583" y2="273" stroke="#111315" stroke-width="2" />
-              <text x="583" y="292" text-anchor="middle" font-family="Inter, sans-serif" font-size="12.5" fill="#111315">Coding-</text>
-              <text x="583" y="309" text-anchor="middle" font-family="Inter, sans-serif" font-size="12.5" fill="#111315">intensive</text>
-
-              <!-- X-Axis Baseline -->
-              <line x1="78" y1="265" x2="660" y2="265" stroke="#111315" stroke-width="2" />
-            </svg>
-          </div>
-
-          <div class="figure-caption">
-            <strong>Fig. 1.</strong> Youth (15 to 29) monthly hiring rates in Canada by AI exposure group, six-month averages. Coding-intensive jobs are a subset of the high-exposure, less complementary group. Data from [2].
-          </div>
-        </div>
-
-        <h3 class="sub-heading" id="res-b">B. AI increases output but hurts learning</h3>
-        <p>The impacts of AI on learning are much clearer than the hiring data. In Shen and Tamkin’s experiment, developers learned Trio, a Python library for asynchronous programming that none of them had used before, and the group that used AI scored 4.15 points lower out of 27 on the follow-up quiz, which is about 17% lower, while also not being significantly faster [3]. The biggest gap was on debugging questions [3]. Notably, how participants used AI made the biggest difference, since those who passed all of their coding to AI averaged below 40%, while those who only asked conceptual questions and fixed their own errors were in the groups that scored 65% or higher (Table I) [3].</p>
-
-        <!-- Table I -->
-        <div class="table-container">
-          <div class="table-header-bar">
-            <span class="table-number">Table I</span>
-            <span class="table-title">Quiz Scores by Way of Using AI [3]</span>
-          </div>
-          <table>
-            <thead>
-              <tr>
-                <th>How the participant used AI</th>
-                <th>n</th>
-                <th>Avg. quiz score</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr>
-                <td>Gave all coding to AI</td>
-                <td>4</td>
-                <td>below 40%</td>
-              </tr>
-              <tr>
-                <td>Asked a few questions, then gave all coding to AI</td>
-                <td>4</td>
-                <td>below 40%</td>
-              </tr>
-              <tr>
-                <td>Used AI to debug and verify code</td>
-                <td>4</td>
-                <td>below 40%</td>
-              </tr>
-              <tr>
-                <td>Generated code, then asked follow-up questions</td>
-                <td>2</td>
-                <td>65% or higher</td>
-              </tr>
-              <tr>
-                <td>Asked for code with explanations</td>
-                <td>3</td>
-                <td>65% or higher</td>
-              </tr>
-              <tr>
-                <td>Asked only conceptual questions</td>
-                <td>7</td>
-                <td>65% or higher</td>
-              </tr>
-            </tbody>
-          </table>
-        </div>
-
-        <p>Gardella et al. observed similar findings over a longer period of time [4]. Novices working with GitHub Copilot scored about 14 points higher out of 100 than when they worked with a human partner, and also reported much lower mental demand and effort [4]. However, when they were retested alone one week later, their scores on tasks they learned with Copilot dropped by about 21 points, compared with only about 3 points for tasks they learned with a partner [4]. This shows that AI made the work easier and faster in the moment, but students kept much less of what they did.</p>
-        <p>This also explains why employers prefer using AI. Brynjolfsson, Li and Raymond found that across 5,179 customer support agents, an AI assistant increased productivity by 14% on average and by 34% for novice workers, while having very little effect on experienced workers [5].</p>
-
-        <h3 class="sub-heading" id="res-c">C. Student and personal experience</h3>
-        <p>The upper-year students I spoke with said that AI helped them speed up coding and syntax fixes on their work terms, but they also said it often hindered their development of foundational debugging skills. They described the bar for entry-level jobs as far greater than what past students had to go through, and there was a lot of negative sentiment about the job search. When I asked what ECE could change, they strongly recommended modernizing the curriculum with industry tools like AI coding CLIs and AI-based work architecture, while also teaching LLM integration.</p>
-
-        <h3 class="sub-heading" id="res-d">D. What Waterloo already has in place</h3>
-        <p>Every course outline at Waterloo must already state the course’s policy on generative AI [7]. Employers must also complete a Student Performance Evaluation (SPE) at the end of every work term for the student to receive credit, and they are encouraged but not required to hold an informal mid-term evaluation [8]. Furthermore, students rate every work term anonymously through Rate My Work Term [9], and ECE 198 already teaches first-year students engineering design and project management practices [11].</p>
-
-        <h3 class="sub-heading" id="res-e">E. Possible obstacles</h3>
-        <p>The main obstacles to these solutions are the extra time supervisors would need for the check-in, the time instructors would need for oral defenses in large classes, and students who may see no AI debugging checks as a step backward.</p>
-      </section>
-
-      <!-- VI. Discussion -->
-      <section class="card-3d" id="discussion">
-        <span class="section-tag">Section VI</span>
-        <h2 class="section-heading">VI. Discussion</h2>
-
-        <h3 class="sub-heading">A. Learning is the risk ECE can act on now</h3>
-        <p>The hiring data shows that the entry-level pathway is getting narrower in both the U.S. and Canada [1], [2]. ECE cannot control the job market, but it can control what students learn in the roles they do get, which is where the evidence is the strongest. Both controlled studies show the same pattern, where novices who pass their work to AI perform as well or better in the moment but understand and retain much less afterward [3], [4]. Debugging had the largest gap [3], which is the exact skill the upper-year students said they were losing.</p>
-        <p>Since a co-op term is four months of this exact type of work, a student could finish a term with a strong evaluation and still not build the engineering judgment the term was supposed to give them. The SPE would not catch this, since it rates performance on the job and AI directly increases performance. This is why Recommendations A and B check understanding directly, and Recommendation C gives the department its own data that national statistics cannot provide [2].</p>
-
-        <h3 class="sub-heading">B. Employers will not fix this on their own</h3>
-        <p>Employers have little reason to fix this problem on their own. AI gives the biggest boost to the least experienced workers [5], and 40% of employers are planning to reduce their workforce where AI can automate tasks [6]. This is why the department needs to set the expectation, and Waterloo is in a strong position to do so since over 8,000 employers hire through its co-op program [10].</p>
-
-        <h3 class="sub-heading">C. Who is affected</h3>
-        <p>This problem affects students first, but the impact goes further than just our cohort. If students skip the junior stage, they will take a lot longer to become senior engineers, limiting the supply of engineering talent. This also raises an ethical question of who gets opportunities, since students who already have strong fundamentals can use AI to work faster without losing much, while students who are still learning, often in their first or second work term, lose the most. Furthermore, engineers are responsible for the work they approve, so a graduate who cannot debug or explain code written by AI is a safety risk and not just a weaker hire.</p>
-
-        <h3 class="sub-heading">D. Alternatives considered</h3>
-        <p>I also considered the option for banning AI in design courses, which would protect learning in the short term, but it goes against what the upper-year students recommended and would leave graduates unprepared for workplaces where these tools are already standard. Another option was leaving the check-in voluntary, which costs nothing, but Waterloo already recommends a mid-term evaluation [8] and that alone has not made it standard.</p>
-      </section>
-
-      <!-- VII. Conclusion -->
-      <section class="card-3d" id="conclusion">
-        <span class="section-tag">Section VII</span>
-        <h2 class="section-heading">VII. Conclusion</h2>
-        <p>Generative AI is already changing entry-level engineering work. In the U.S., young workers in AI-exposed jobs are being hired much less [1], and in Canada youth hiring has fallen in every occupation group, with coding-intensive jobs now at the lowest rate [2]. In the roles that are left, novices who pass their work to AI finish faster but understand and remember much less, especially when debugging [3], [4], and employers have strong reasons to keep using it [5], [6]. For Waterloo ECE, this means co-op could end up producing work without building the skills students need to become senior engineers. The main takeaways from this report are:</p>
-        <ul class="clean-list">
-          <li>The entry-level pathway is getting narrower, and more of the work in the roles that remain is being done by AI.</li>
-          <li>How students use AI matters more than whether they use it, since asking conceptual questions still preserves learning [3].</li>
-          <li>Small changes to processes Waterloo already runs, such as course AI policies, the SPE and Rate My Work Term, can address this problem without building new systems.</li>
-        </ul>
-        <p>I recommend that the department pilot the design course framework next term, work with Co-operative and Experiential Education on the required check-in, and begin tracking co-op outcomes, so that within a year the department has its own evidence on how AI is changing co-op for its students. If this problem is not addressed early, the career ladder could stop producing the engineering talent needed to keep advancing society, and I am eager to help find out what can be done.</p>
-      </section>
-
-      <!-- References -->
-      <section class="card-3d" id="references">
-        <span class="section-tag">Bibliography</span>
-        <h2 class="section-heading">References</h2>
-        <ul class="ref-list">
-          <li class="ref-item">
-            <span class="ref-num">[1]</span>
-            <span class="ref-text">E. Brynjolfsson, B. Chandar, and R. Chen, “Canaries in the coal mine? Six facts about the recent employment effects of artificial intelligence,” Stanford Digital Economy Lab, Stanford Univ., Stanford, CA, USA, Aug. 2026. Accessed: Nov. 18, 2026. [Online]. Available: <a href="https://digitaleconomy.stanford.edu/app/uploads/2026/08/Canaries_August2026.pdf" target="_blank" rel="noopener">https://digitaleconomy.stanford.edu/app/uploads/2026/08/Canaries_August2026.pdf</a></span>
+        <!-- Scroll Beats -->
+        <ul class="beat-list">
+          <li class="beat active" data-beat="ca">
+            <div class="beat-code microtype"><i></i> <span>01 / U.S. Payroll Records [1]</span></div>
+            <h3>19% below trend for 22- to 25-year-olds</h3>
+            <p>
+              Using ADP payroll records for millions of U.S. workers through June 2026, Stanford researchers found that employment of 22- to 25-year-olds in the most AI-exposed occupations (such as software development) is about 19% below where it would be had it kept pace with less-exposed occupations—up from a 15% gap a year earlier [1]. Between November 2022 and June 2026, employment for this group fell about 11% in the most exposed jobs while growing about 10% in the least exposed jobs [1].
+            </p>
           </li>
-          <li class="ref-item">
-            <span class="ref-num">[2]</span>
-            <span class="ref-text">T. Mehdi and M. Frenette, “Hiring and job separation rates in the era of generative artificial intelligence: Early evidence,” Econ. Soc. Rep., Statistics Canada, Ottawa, ON, Canada, Cat. no. 36-28-0001, Oct. 28, 2026, doi: 10.25318/36280001202601000003-eng.</span>
+
+          <li class="beat" data-beat="ca">
+            <div class="beat-code microtype"><i></i> <span>02 / Canadian Labour Force Survey [2]</span></div>
+            <h3>Coding-intensive youth hiring fell to 1.9%</h3>
+            <p>
+              In Canada, Statistics Canada’s October 2026 study (using Labour Force Survey data from 2006 to August 2026) found that youth (15 to 29) hiring rates have fallen in every occupation group [2]. Coding-intensive jobs—the closest group to ECE co-op roles—now have the lowest youth hiring rate of all groups measured at 1.9%, a drastic drop from a 15-year high of 5.8% in late 2021 [2].
+            </p>
           </li>
-          <li class="ref-item">
-            <span class="ref-num">[3]</span>
-            <span class="ref-text">J. H. Shen and A. Tamkin, “How AI impacts skill formation,” arXiv:2601.20245, Jan. 2026. Accessed: Nov. 18, 2026. [Online]. Available: <a href="https://arxiv.org/abs/2601.20245" target="_blank" rel="noopener">https://arxiv.org/abs/2601.20245</a></span>
-          </li>
-          <li class="ref-item">
-            <span class="ref-num">[4]</span>
-            <span class="ref-text">N. Gardella, J. Prather, J. Leinonen, P. Denny, R. Pettit, and S. L. Riggs, “Fast and forgettable: A controlled study of novices’ performance, learning, workload, and emotion in AI-assisted and human pair programming paradigms,” arXiv:2604.18538, Apr. 2026. Accessed: Nov. 18, 2026. [Online]. Available: <a href="https://arxiv.org/abs/2604.18538" target="_blank" rel="noopener">https://arxiv.org/abs/2604.18538</a></span>
-          </li>
-          <li class="ref-item">
-            <span class="ref-num">[5]</span>
-            <span class="ref-text">E. Brynjolfsson, D. Li, and L. Raymond, “Generative AI at work,” Quart. J. Econ., vol. 140, no. 2, pp. 889–942, May 2025, doi: 10.1093/qje/qjae044.</span>
-          </li>
-          <li class="ref-item">
-            <span class="ref-num">[6]</span>
-            <span class="ref-text">World Economic Forum, The Future of Jobs Report 2025. Geneva, Switzerland: World Economic Forum, Jan. 2025. Accessed: Nov. 9, 2026. [Online]. Available: <a href="https://www.weforum.org/publications/the-future-of-jobs-report-2025/" target="_blank" rel="noopener">https://www.weforum.org/publications/the-future-of-jobs-report-2025/</a></span>
-          </li>
-          <li class="ref-item">
-            <span class="ref-num">[7]</span>
-            <span class="ref-text">University of Waterloo, Office of the Associate Vice-President, Academic, “Course outline requirements and recommendations,” Sep. 2025. Accessed: Nov. 18, 2026. [Online]. Available: <a href="https://uwaterloo.ca/associate-vice-president-academic/course-outline-requirements-and-recommendations" target="_blank" rel="noopener">https://uwaterloo.ca/associate-vice-president-academic/course-outline-requirements-and-recommendations</a></span>
-          </li>
-          <li class="ref-item">
-            <span class="ref-num">[8]</span>
-            <span class="ref-text">University of Waterloo, “Co-op student performance evaluations,” Hire Waterloo. Accessed: Nov. 18, 2026. [Online]. Available: <a href="https://uwaterloo.ca/hire/how-to-hire/performance-evaluations" target="_blank" rel="noopener">https://uwaterloo.ca/hire/how-to-hire/performance-evaluations</a></span>
-          </li>
-          <li class="ref-item">
-            <span class="ref-num">[9]</span>
-            <span class="ref-text">University of Waterloo, “Employer work term rating summary,” Hire Waterloo. Accessed: Nov. 18, 2026. [Online]. Available: <a href="https://uwaterloo.ca/hire/work-term-rating-summary" target="_blank" rel="noopener">https://uwaterloo.ca/hire/work-term-rating-summary</a></span>
-          </li>
-          <li class="ref-item">
-            <span class="ref-num">[10]</span>
-            <span class="ref-text">University of Waterloo, “Co-op programs,” Future Students. Accessed: Nov. 18, 2026. [Online]. Available: <a href="https://uwaterloo.ca/future-students/co-op" target="_blank" rel="noopener">https://uwaterloo.ca/future-students/co-op</a></span>
-          </li>
-          <li class="ref-item">
-            <span class="ref-num">[11]</span>
-            <span class="ref-text">P. Lam, R. Pellizzoni, and B. Roehl, “ECE 198: Project studio,” course outline, Dept. Elect. Comput. Eng., Univ. of Waterloo, Waterloo, ON, Canada, Fall 2021. [Online]. Available: <a href="https://patricklam.ca/teaching/ece198-f21.pdf" target="_blank" rel="noopener">https://patricklam.ca/teaching/ece198-f21.pdf</a></span>
+
+          <li class="beat" data-beat="us">
+            <div class="beat-code microtype"><i></i> <span>03 / Employer Workforce Plans [6]</span></div>
+            <h3>40% of employers plan automation cuts</h3>
+            <p>
+              The drop comes mainly from employers hiring fewer young workers rather than laying them off, concentrated in jobs where AI automates tasks while experienced workers are not impacted by much [1]. Looking ahead, 40% of employers surveyed in the World Economic Forum’s Future of Jobs Report 2025 plan to reduce their workforce in areas where AI can automate tasks [6].
+            </p>
           </li>
         </ul>
-      </section>
+      </div>
+    </div>
+  </section>
 
-      <!-- Appendix A -->
-      <section class="card-3d" id="appendix-a">
-        <span class="section-tag">Appendix A</span>
-        <h2 class="section-heading">Appendix A: Key Figures</h2>
+  <!-- ================= 03 / CHAPTER II: AI INCREASES OUTPUT BUT HURTS LEARNING ================= -->
+  <section class="study study-learning" id="learning">
+    <div class="bound">
+      <div class="folio microtype">
+        <span>03 / Controlled Learning Studies</span>
+        <span>Shen &amp; Tamkin (n = 52) [3] • Gardella et al. (n = 22) [4] • Capstone Interviews</span>
+      </div>
 
-        <div class="table-container" style="margin-top: 8px; margin-bottom: 0;">
-          <div class="table-header-bar">
-            <span class="table-number">Table II</span>
-            <span class="table-title">Figures Used in This Report</span>
+      <div class="study-title">
+        <div>
+          <span class="flight-kicker microtype"><i></i> Finding B • Fast and Forgettable</span>
+          <h2>High output in the moment. <em>Severe gaps</em> in comprehension.</h2>
+        </div>
+        <p>How a student uses AI matters far more than whether they use it.</p>
+      </div>
+
+      <div class="study-spread">
+        <!-- Sticky Interactive Table I & Retest Instrument -->
+        <div class="study-visual">
+          <div class="instrument-window">
+            <div class="field-grid"></div>
+
+            <div class="instrument-legend microtype">
+              <span class="tag-live">Table I • Quiz Scores by Way of Using AI [3]</span>
+              <div class="inst-tabs">
+                <button type="button" class="inst-tab active" data-learn-view="table">Table I (Shen &amp; Tamkin)</button>
+                <button type="button" class="inst-tab" data-learn-view="decay">1-Week Retest [4]</button>
+              </div>
+            </div>
+
+            <!-- View 1: Interactive Table I -->
+            <div id="learn-table-view">
+              <p style="font-size:13px; color:var(--sub); margin-bottom:12px;">
+                52 developers learned <code>Trio</code> (an unfamiliar Python async library). Overall, the AI group scored <strong>4.15 points lower out of 27 (≈17% lower)</strong> without finishing significantly faster [3]:
+              </p>
+              <div class="ai-mode-grid">
+                <div class="ai-mode-row">
+                  <span class="ai-mode-name">Gave all coding to AI</span>
+                  <span class="ai-mode-n">n = 4</span>
+                  <span class="ai-mode-badge badge-low">below 40%</span>
+                </div>
+                <div class="ai-mode-row">
+                  <span class="ai-mode-name">Asked a few questions, then gave all coding to AI</span>
+                  <span class="ai-mode-n">n = 4</span>
+                  <span class="ai-mode-badge badge-low">below 40%</span>
+                </div>
+                <div class="ai-mode-row">
+                  <span class="ai-mode-name">Used AI to debug and verify code</span>
+                  <span class="ai-mode-n">n = 4</span>
+                  <span class="ai-mode-badge badge-low">below 40%</span>
+                </div>
+                <div class="ai-mode-row highlighted">
+                  <span class="ai-mode-name">Generated code, then asked follow-up questions</span>
+                  <span class="ai-mode-n">n = 2</span>
+                  <span class="ai-mode-badge badge-high">65% or higher</span>
+                </div>
+                <div class="ai-mode-row highlighted">
+                  <span class="ai-mode-name">Asked for code with explanations</span>
+                  <span class="ai-mode-n">n = 3</span>
+                  <span class="ai-mode-badge badge-high">65% or higher</span>
+                </div>
+                <div class="ai-mode-row highlighted">
+                  <span class="ai-mode-name">Asked only conceptual questions</span>
+                  <span class="ai-mode-n">n = 7</span>
+                  <span class="ai-mode-badge badge-high">65% or higher</span>
+                </div>
+              </div>
+            </div>
+
+            <!-- View 2: Gardella et al. One-Week Retest Drop -->
+            <div class="decay-panel" id="learn-decay-view">
+              <div class="decay-card">
+                <div class="microtype" style="color:var(--highlight);">During Initial Task (0–100 Scale) [4]</div>
+                <div style="font-size:24px; font-weight:530; margin-top:4px;">GitHub Copilot: ≈ +14 points higher</div>
+                <p style="font-size:13.5px; color:var(--sub); margin-top:4px;">
+                  Novices (n = 22) working with GitHub Copilot scored about 14 points higher out of 100 than with a human partner, reporting much lower mental demand and effort [4].
+                </p>
+              </div>
+
+              <div class="decay-card">
+                <div class="microtype" style="color:#FCA5A5;">Retested Alone 1 Week Later [4]</div>
+                <div style="display:flex; justify-content:space-between; margin-top:10px; font-size:14px;">
+                  <span>Tasks learned with <strong>GitHub Copilot</strong></span>
+                  <strong style="color:#FCA5A5; font-family:var(--mono);">≈ −21 points</strong>
+                </div>
+                <div class="decay-bar-track">
+                  <div class="decay-bar-fill" style="width:78%; background:#EF4444;"></div>
+                </div>
+
+                <div style="display:flex; justify-content:space-between; margin-top:16px; font-size:14px;">
+                  <span>Tasks learned with a <strong>Human Partner</strong></span>
+                  <strong style="color:#86EFAC; font-family:var(--mono);">≈ −3 points</strong>
+                </div>
+                <div class="decay-bar-track">
+                  <div class="decay-bar-fill" style="width:14%; background:#22C55E;"></div>
+                </div>
+              </div>
+            </div>
+
+            <div class="instrument-readout microtype">
+              <span>Largest Skill Deficit: <b>Debugging Questions [3]</b></span>
+              <span>Conceptual Questions Preserve Learning</span>
+            </div>
           </div>
-          <table>
+        </div>
+
+        <!-- Scroll Beats -->
+        <ul class="beat-list">
+          <li class="beat active">
+            <div class="beat-code microtype"><i></i> <span>01 / First-Year Co-op Experience</span></div>
+            <h3>When AI does everything a junior dev is hired to do</h3>
+            <p>
+              This past summer I worked as a junior backend developer. During that internship, AI was capable of doing everything I did on the job, which hindered my learning experience since my employer preferred using AI as it produced working code much faster.
+            </p>
+          </li>
+
+          <li class="beat">
+            <div class="beat-code microtype"><i></i> <span>02 / Conceptual vs. Delegated Coding [3]</span></div>
+            <h3>Passing coding to AI drops quiz scores below 40%</h3>
+            <p>
+              In Shen and Tamkin’s randomized experiment with 52 developers learning Trio, participants who passed all coding to AI—or used AI to debug and verify code—averaged below 40% on the follow-up quiz [3]. Those who only asked conceptual questions and fixed their own errors scored 65% or higher (Table I) [3].
+            </p>
+          </li>
+
+          <li class="beat">
+            <div class="beat-code microtype"><i></i> <span>03 / Upper-Year Capstone Students (A–D)</span></div>
+            <h3>Eroding foundational debugging skills</h3>
+            <p>
+              Four upper-year Waterloo ECE students completing their capstone projects (Students A to D) reported that while AI sped up coding and syntax fixes on their work terms, it hindered their development of foundational debugging skills—the exact area where Shen and Tamkin found the largest comprehension gap [3]. They recommended modernizing the curriculum with AI coding CLIs, AI-based work architecture, and LLM integration.
+            </p>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <!-- ================= 04 / CHAPTER III: WHY EMPLOYERS & SPE WON'T CATCH IT ================= -->
+  <section class="study study-incentives">
+    <div class="bound">
+      <div class="folio microtype">
+        <span>04 / The Incentive Mismatch</span>
+        <span>Brynjolfsson, Li &amp; Raymond (n = 5,179) [5] • Waterloo SPE [8]</span>
+      </div>
+
+      <div class="study-title">
+        <div>
+          <span class="flight-kicker microtype"><i></i> Discussion • Why ECE Must Act</span>
+          <h2>Employers will not fix this <em>on their own</em></h2>
+        </div>
+        <p>AI boosts short-term novice output by 34% [5]—masking shallow learning on standard performance evaluations.</p>
+      </div>
+
+      <div class="study-spread">
+        <div class="study-visual">
+          <div class="instrument-window">
+            <div class="field-grid"></div>
+            <div class="instrument-legend microtype">
+              <span class="tag-live">Productivity Gain With AI Assistant [5]</span>
+              <span>5,179 Support Agents</span>
+            </div>
+
+            <div style="display:grid; grid-template-columns:1fr 1fr; gap:18px; margin:auto 0;">
+              <div style="padding:24px; border:1px solid var(--rule); border-radius:10px; background:rgba(255,255,255,0.45);">
+                <div class="microtype">All Workers Average [5]</div>
+                <div style="font-family:var(--serif); font-size:60px; line-height:1; margin:10px 0; color:var(--s-ink);">+14%</div>
+                <p style="font-size:13.5px; color:var(--sub);">Average productivity increase across 5,179 agents, with very little effect on experienced workers.</p>
+              </div>
+              <div style="padding:24px; border:1px solid var(--highlight); border-radius:10px; background:rgba(57,92,149,0.08);">
+                <div class="microtype" style="color:var(--highlight);">Novice Workers [5]</div>
+                <div style="font-family:var(--serif); font-size:60px; line-height:1; margin:10px 0; color:var(--highlight);">+34%</div>
+                <p style="font-size:13.5px; color:var(--sub);">Productivity surge for novices—giving employers every incentive to prioritize immediate AI output over deep skill retention.</p>
+              </div>
+            </div>
+
+            <div class="instrument-readout microtype">
+              <span>Waterloo Leverage: <b>8,000+ Co-op Employers [10]</b></span>
+              <span>SPE Rates Output, Not Retention [8]</span>
+            </div>
+          </div>
+        </div>
+
+        <ul class="beat-list">
+          <li class="beat active">
+            <div class="beat-code microtype"><i></i> <span>01 / The Illusion of a Strong Evaluation</span></div>
+            <h3>The SPE measures job performance—and AI inflates performance</h3>
+            <p>
+              Since a co-op term is four months of junior work, a student could finish a term with an outstanding Student Performance Evaluation (SPE) [8] and still not build the engineering judgment the term was supposed to give them. The SPE will not catch this because it rates performance on the job, and AI directly increases novice output [4], [5].
+            </p>
+          </li>
+
+          <li class="beat">
+            <div class="beat-code microtype"><i></i> <span>02 / Ethical &amp; Engineering Safety Risk</span></div>
+            <h3>Who loses the most—and professional accountability</h3>
+            <p>
+              Students who already have strong fundamentals can use AI to work faster without losing much, while students in their first or second work term lose the most. Furthermore, engineers are responsible for the work they approve: a graduate who cannot debug or explain code written by AI is a safety risk, not just a weaker hire.
+            </p>
+          </li>
+
+          <li class="beat">
+            <div class="beat-code microtype"><i></i> <span>03 / Why Alternatives Fall Short</span></div>
+            <h3>Neither banning AI nor voluntary check-ins work</h3>
+            <p>
+              Banning AI in design courses would protect short-term learning but goes against upper-year student recommendations and leaves graduates unprepared for industry. Leaving employer check-ins voluntary costs nothing, but Waterloo already recommends an informal mid-term evaluation [8] and that alone has not made it standard.
+            </p>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <!-- ================= 05 / THE 3 RECOMMENDATIONS ================= -->
+  <section class="service" id="recommendations">
+    <div class="bound">
+      <div class="folio microtype">
+        <span>05 / Action Plan for Waterloo ECE</span>
+        <span>Built on Existing Waterloo Processes [7], [8], [9], [11]</span>
+      </div>
+
+      <div class="service-spread">
+        <div class="service-side">
+          <span class="flight-kicker microtype"><i></i> Section II • Recommendations</span>
+          <h2>Three measures to protect <em>student learning</em></h2>
+          <p>
+            ECE cannot control the North American job market, but it can control what students learn in their courses and co-op roles by upgrading three processes Waterloo already runs.
+          </p>
+          <div class="existing-anchor">
+            <span>Zero New Bureaucratic Systems Required</span>
+          </div>
+        </div>
+
+        <div>
+          <!-- Recommendation A -->
+          <div class="station active">
+            <div class="station-track"><span>A</span></div>
+            <div class="station-body">
+              <div class="station-meta microtype">Recommendation A • Curriculum Pilot</div>
+              <h3>Teach and assess AI use in a second-year design course</h3>
+              <p>
+                Pilot a structured AI framework in one second-year ECE design course next term that permits students to use AI freely and completely while requiring them to document and justify why AI was appropriate for specific tasks. Allow repetitive tasks to be done completely by AI if the decision-making process and architecture are understood by the student.
+              </p>
+              <p>
+                Pair this with short <strong>no-AI debugging checks</strong> and <strong>sample oral defenses</strong> so students must independently explain and extend their work, and explicitly train students to ask conceptual questions instead of generating finished code [3].
+              </p>
+              <span class="existing-anchor">Builds on: Mandatory Course Outline AI Policies [7] &amp; ECE 198 Design Studio [11]</span>
+            </div>
+          </div>
+
+          <!-- Recommendation B -->
+          <div class="station">
+            <div class="station-track"><span>B</span></div>
+            <div class="station-body">
+              <div class="station-meta microtype">Recommendation B • WaterlooWorks Requirement</div>
+              <h3>Add a required 20-minute midterm learning check-in to co-op terms</h3>
+              <p>
+                Partner with Waterloo’s Co-operative and Experiential Education office to require a brief midterm check-in (around week 6 or 7) that all employers on WaterlooWorks must agree to provide when hiring ECE students, assessing technical growth and design decisions on the job.
+              </p>
+              <p>
+                Provide employers with a one-page onboarding guide (Appendix B) to keep administrative burden low. With over 8,000 employers hiring through Waterloo co-op [10], the faculty has the leverage to make deep skill retention a condition of hiring from the ECE cohort.
+              </p>
+              <span class="existing-anchor">Builds on: Existing Informal Mid-Term Evaluation Recommendation [8]</span>
+            </div>
+          </div>
+
+          <!-- Recommendation C -->
+          <div class="station">
+            <div class="station-track"><span>C</span></div>
+            <div class="station-body">
+              <div class="station-meta microtype">Recommendation C • Longitudinal Department Data</div>
+              <h3>Track ECE-specific co-op outcomes and AI reliance</h3>
+              <p>
+                Have ECE faculty staff collect anonymous aggregated data at the end of each work term on placement rates, role responsibilities, and student-reported AI reliance using a few added questions in the Rate My Work Term survey students already complete [9], paired with aggregated check-in ratings from Recommendation B.
+              </p>
+              <p>
+                Because national labor statistics group occupations broadly [2] instead of isolating engineering disciplines, internal tracking gives ECE reliable evidence within a year on how entry-level work is shifting at Waterloo [1], [2].
+              </p>
+              <span class="existing-anchor">Builds on: Anonymous Rate My Work Term Survey [9]</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ================= 06 / APPENDIX B INTERACTIVE CHECK-IN & APPENDIX A TABLE II ================= -->
+  <section class="archive-section" id="framework">
+    <div class="bound">
+      <div class="folio microtype">
+        <span>06 / Appendixes A &amp; B</span>
+        <span>Draft Employer Onboarding Guide &amp; Summary Figures</span>
+      </div>
+
+      <div class="archive-spread">
+        <!-- Appendix B Interactive Card -->
+        <div class="checkin-card">
+          <span class="microtype" style="color:var(--accent);">Appendix B • One-Page Onboarding Guide</span>
+          <h3>Draft Employer Check-In Guide</h3>
+          <p style="font-size:15px; color:var(--body);">
+            <strong>Purpose:</strong> A 20-minute conversation around week six or seven of the work term that checks what the student has learned, in addition to what they have produced.
+          </p>
+
+          <div class="microtype" style="margin-top:20px; color:var(--body);">4 Questions for the Supervisor to Ask:</div>
+          <ol class="q-list">
+            <li class="q-item"><span class="q-num">01</span><span>What have you built or changed so far this term?</span></li>
+            <li class="q-item"><span class="q-num">02</span><span>Which part of that work could you rebuild or debug without AI tools?</span></li>
+            <li class="q-item"><span class="q-num">03</span><span>Explain one design decision you made and why you chose it.</span></li>
+            <li class="q-item"><span class="q-num">04</span><span>What skill will you focus on for the rest of the term?</span></li>
+          </ol>
+
+          <div class="rating-sim">
+            <div class="microtype" style="color:var(--body);">Interactive WaterlooWorks Recording Preview (Select a Rating):</div>
+            <div class="rating-buttons">
+              <button type="button" class="rate-btn active" data-rate="ontrack">On track</button>
+              <button type="button" class="rate-btn" data-rate="support">Needs support</button>
+              <button type="button" class="rate-btn" data-rate="notyet">Not yet able to explain own work</button>
+            </div>
+            <div class="rate-outcome" id="rate-outcome-box">
+              <strong>On track:</strong> The supervisor selects one rating in WaterlooWorks and may add one comment. The rating is shared with the student and used only in aggregate by ECE.
+            </div>
+          </div>
+        </div>
+
+        <!-- Appendix A Table II -->
+        <div>
+          <span class="microtype" style="color:var(--accent);">Appendix A • Table II</span>
+          <h3 style="font-size:28px; font-weight:520; margin:8px 0 16px;">Figures Used in This Report</h3>
+          <table class="figures-table">
             <thead>
               <tr>
                 <th>Measure</th>
@@ -1139,191 +1899,267 @@
             </tbody>
           </table>
         </div>
-      </section>
+      </div>
+    </div>
+  </section>
 
-      <!-- Appendix B -->
-      <section class="card-3d" id="appendix-b">
-        <span class="section-tag">Appendix B</span>
-        <h2 class="section-heading">Appendix B: Draft Employer Check-In Guide</h2>
-        <p><strong>Purpose.</strong> A 20-minute conversation around week six or seven of the work term that checks what the student has learned, in addition to what they have produced.</p>
-        <p><strong>Questions for the supervisor to ask:</strong></p>
-        <ol class="numbered-list">
-          <li>What have you built or changed so far this term?</li>
-          <li>Which part of that work could you rebuild or debug without AI tools?</li>
-          <li>Explain one design decision you made and why you chose it.</li>
-          <li>What skill will you focus on for the rest of the term?</li>
-        </ol>
-        <p><strong>Recording.</strong> The supervisor selects one rating in WaterlooWorks (On track, Needs support, or Not yet able to explain own work) and may add one comment. The rating is shared with the student and used only in aggregate by ECE.</p>
-        <p><strong>Follow-up.</strong> If a student is rated Needs support, the supervisor assigns one task in the second half of the term that the student completes and explains without AI.</p>
-      </section>
+  <!-- ================= 07 / TRANSMITTAL, OBSTACLES & REFERENCES ARCHIVE ================= -->
+  <footer class="downlink" id="archive">
+    <div class="bound">
+      <div class="folio microtype">
+        <span>07 / Transmittal, Methods &amp; References</span>
+        <span>COMMST 192 • Engineering Communication (Instructor: Prof. Kate Wells)</span>
+      </div>
 
-    </main>
-  </div>
+      <div class="downlink-grid">
+        <div>
+          <span class="flight-kicker microtype"><i></i> Letter of Transmittal • Nov 18, 2026</span>
+          <h2>Submitted to <em>Prof. Mahesh Tripunitara</em></h2>
 
-  <!-- Minimalist 3D Spatial Canvas + Interactive Card Tilt -->
+          <div class="transmittal-box">
+            <div class="transmittal-meta">
+              <span>TO:</span>
+              <span>Prof. Mahesh Tripunitara, Associate Chair for Undergraduate Studies, Department of Electrical and Computer Engineering, University of Waterloo</span>
+              <span>FROM:</span>
+              <span>Lakshmanan Ramanathan, Computer Engineering Student</span>
+              <span>DATE:</span>
+              <span>November 18, 2026 (Report Date: November 19, 2026)</span>
+              <span>SUBJECT:</span>
+              <span>A recommendation report on protecting the learning value of co-op in the time of generative AI</span>
+            </div>
+            <p style="margin-bottom:12px;">
+              Attached below is my report on how generative AI may be changing the entry-level work that co-op students at Waterloo rely on to build work experience, and recommendations that your office could investigate implementing to make us more prepared for an age of AI.
+            </p>
+            <p style="margin-bottom:12px;">
+              If this problem is not addressed early, the career ladder could stop producing the engineering talent needed to keep advancing society, and I am eager to help find out what can be done.
+            </p>
+            <p style="font-family:var(--mono); font-size:12px; color:#86EDF4;">
+              Sincerely, Lakshmanan Ramanathan • Encl.: Recommendation report (with appendixes and references)
+            </p>
+          </div>
+        </div>
+
+        <div class="ref-accordion">
+          <details class="drawer" open>
+            <summary>
+              <span>Published References [1] – [11]</span>
+              <span class="microtype" style="color:#86EDF4;">11 Sources</span>
+            </summary>
+            <div class="drawer-body">
+              <p><strong>[1]</strong> E. Brynjolfsson, B. Chandar, and R. Chen, “Canaries in the coal mine? Six facts about the recent employment effects of artificial intelligence,” Stanford Digital Economy Lab, Stanford Univ., Stanford, CA, USA, Aug. 2026. Accessed: Nov. 18, 2026. [Online]. Available: <a href="https://digitaleconomy.stanford.edu/app/uploads/2026/08/Canaries_August2026.pdf" target="_blank" rel="noopener">Stanford PDF</a></p>
+              <p><strong>[2]</strong> T. Mehdi and M. Frenette, “Hiring and job separation rates in the era of generative artificial intelligence: Early evidence,” Econ. Soc. Rep., Statistics Canada, Ottawa, ON, Canada, Cat. no. 36-28-0001, Oct. 28, 2026, doi: 10.25318/36280001202601000003-eng.</p>
+              <p><strong>[3]</strong> J. H. Shen and A. Tamkin, “How AI impacts skill formation,” arXiv:2601.20245, Jan. 2026. Accessed: Nov. 18, 2026. [Online]. Available: <a href="https://arxiv.org/abs/2601.20245" target="_blank" rel="noopener">arXiv:2601.20245</a></p>
+              <p><strong>[4]</strong> N. Gardella, J. Prather, J. Leinonen, P. Denny, R. Pettit, and S. L. Riggs, “Fast and forgettable: A controlled study of novices’ performance, learning, workload, and emotion in AI-assisted and human pair programming paradigms,” arXiv:2604.18538, Apr. 2026. Accessed: Nov. 18, 2026. [Online]. Available: <a href="https://arxiv.org/abs/2604.18538" target="_blank" rel="noopener">arXiv:2604.18538</a></p>
+              <p><strong>[5]</strong> E. Brynjolfsson, D. Li, and L. Raymond, “Generative AI at work,” Quart. J. Econ., vol. 140, no. 2, pp. 889–942, May 2025, doi: 10.1093/qje/qjae044.</p>
+              <p><strong>[6]</strong> World Economic Forum, The Future of Jobs Report 2025. Geneva, Switzerland: World Economic Forum, Jan. 2025. Accessed: Nov. 9, 2026. [Online]. Available: <a href="https://www.weforum.org/publications/the-future-of-jobs-report-2025/" target="_blank" rel="noopener">WEF Report 2025</a></p>
+              <p><strong>[7]</strong> University of Waterloo, Office of the Associate Vice-President, Academic, “Course outline requirements and recommendations,” Sep. 2025. [Online]. Available: <a href="https://uwaterloo.ca/associate-vice-president-academic/course-outline-requirements-and-recommendations" target="_blank" rel="noopener">uwaterloo.ca</a></p>
+              <p><strong>[8]</strong> University of Waterloo, “Co-op student performance evaluations,” Hire Waterloo. [Online]. Available: <a href="https://uwaterloo.ca/hire/how-to-hire/performance-evaluations" target="_blank" rel="noopener">uwaterloo.ca/hire</a></p>
+              <p><strong>[9]</strong> University of Waterloo, “Employer work term rating summary,” Hire Waterloo. [Online]. Available: <a href="https://uwaterloo.ca/hire/work-term-rating-summary" target="_blank" rel="noopener">uwaterloo.ca/hire</a></p>
+              <p><strong>[10]</strong> University of Waterloo, “Co-op programs,” Future Students. [Online]. Available: <a href="https://uwaterloo.ca/future-students/co-op" target="_blank" rel="noopener">uwaterloo.ca/future-students</a></p>
+              <p><strong>[11]</strong> P. Lam, R. Pellizzoni, and B. Roehl, “ECE 198: Project studio,” course outline, Dept. Elect. Comput. Eng., Univ. of Waterloo, Fall 2021. [Online]. Available: <a href="https://patricklam.ca/teaching/ece198-f21.pdf" target="_blank" rel="noopener">ece198-f21.pdf</a></p>
+            </div>
+          </details>
+
+          <details class="drawer">
+            <summary>
+              <span>Methods &amp; Possible Obstacles</span>
+              <span class="microtype" style="color:#86EDF4;">Section IV &amp; V-E</span>
+            </summary>
+            <div class="drawer-body">
+              <p><strong>Methods:</strong> Literature review supported by conversations with four anonymous upper-year ECE capstone students (Students A to D), public course outlines (ECE 198 [11]), Waterloo course outline requirements [7], and co-op evaluation processes [8], [9], with a data cutoff of November 18, 2026.</p>
+              <p><strong>Possible Obstacles:</strong> The main obstacles to these solutions are the extra time supervisors would need for the check-in, the time instructors would need for oral defenses in large classes, and students who may see no-AI debugging checks as a step backward.</p>
+            </div>
+          </details>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <!-- ================= INTERACTIVITY & 3D ORBITAL CANVAS SCRIPT ================= -->
   <script>
     (function () {
-      // 1. Scroll progress and active navigation spy
-      const progressFill = document.getElementById('scroll-progress');
-      const sections = Array.from(document.querySelectorAll('section.card-3d, h3[id]'));
-      const navLinks = Array.from(document.querySelectorAll('.nav-link'));
+      // 1. Header Scroll State & Active Section Spy
+      const navLinks = Array.from(document.querySelectorAll('.desktop-nav a'));
+      const spyTargets = ['thesis', 'hiring', 'learning', 'recommendations', 'framework', 'archive'].map(id => document.getElementById(id));
+      const gyroSvg = document.getElementById('gyro-svg');
 
       function onScroll() {
-        const scrollTop = window.scrollY || document.documentElement.scrollTop;
-        const docHeight = document.documentElement.scrollHeight - window.innerHeight;
-        const pct = docHeight > 0 ? Math.min(100, Math.max(0, (scrollTop / docHeight) * 100)) : 0;
-        progressFill.style.width = pct + '%';
+        const y = window.scrollY || 0;
+        document.body.classList.toggle('scrolled', y > window.innerHeight * 0.72);
+        if (gyroSvg) {
+          gyroSvg.style.transform = `rotate(${(y * 0.08).toFixed(1)}deg)`;
+        }
 
-        let currentId = 'transmittal';
-        for (const sec of sections) {
-          const rect = sec.getBoundingClientRect();
-          if (rect.top <= 160) {
-            currentId = sec.id;
+        let current = 'thesis';
+        for (const el of spyTargets) {
+          if (el && el.getBoundingClientRect().top <= 200) {
+            current = el.id;
           }
         }
-        navLinks.forEach(link => {
-          const href = link.getAttribute('href').slice(1);
-          link.classList.toggle('active', href === currentId);
+        navLinks.forEach(a => {
+          a.classList.toggle('active', a.getAttribute('href') === '#' + current);
         });
       }
-
       window.addEventListener('scroll', onScroll, { passive: true });
       onScroll();
 
-      // 2. Subtle 3D Card Perspective Tilt
-      let tiltEnabled = true;
-      const toggleBtn = document.getElementById('toggle-3d-btn');
-      const cards = document.querySelectorAll('.card-3d');
-
-      toggleBtn.addEventListener('click', () => {
-        tiltEnabled = !tiltEnabled;
-        toggleBtn.textContent = tiltEnabled ? '3D Tilt: Active' : '3D Tilt: Off';
-        if (!tiltEnabled) {
-          cards.forEach(c => {
-            c.style.transform = 'none';
-          });
+      // 2. Night Mode Toggle
+      const themeBtn = document.getElementById('theme-toggle');
+      themeBtn.addEventListener('click', () => {
+        const isNight = document.documentElement.getAttribute('data-theme') === 'night';
+        if (isNight) {
+          document.documentElement.removeAttribute('data-theme');
+          themeBtn.textContent = 'Night Mode';
+        } else {
+          document.documentElement.setAttribute('data-theme', 'night');
+          themeBtn.textContent = 'Day Mode';
         }
       });
 
-      cards.forEach(card => {
-        card.addEventListener('mousemove', (e) => {
-          if (!tiltEnabled) return;
-          const rect = card.getBoundingClientRect();
-          const x = e.clientX - rect.left;
-          const y = e.clientY - rect.top;
-          card.style.setProperty('--mouse-x', `${x}px`);
-          card.style.setProperty('--mouse-y', `${y}px`);
-
-          const centerX = rect.width / 2;
-          const centerY = rect.height / 2;
-          const rotateX = ((y - centerY) / centerY) * -1.35;
-          const rotateY = ((x - centerX) / centerX) * 1.35;
-
-          card.style.transform = `rotateX(${rotateX.toFixed(2)}deg) rotateY(${rotateY.toFixed(2)}deg) translateZ(4px)`;
-        });
-
-        card.addEventListener('mouseleave', () => {
-          card.style.transform = 'rotateX(0deg) rotateY(0deg) translateZ(0px)';
+      // 3. Interactive Instrument 01 Tabs (Canada Fig 1 vs US Stanford)
+      const chartTabs = document.querySelectorAll('[data-chart-view]');
+      const chartCa = document.getElementById('chart-ca');
+      const chartUs = document.getElementById('chart-us');
+      chartTabs.forEach(btn => {
+        btn.addEventListener('click', () => {
+          chartTabs.forEach(b => b.classList.remove('active'));
+          btn.classList.add('active');
+          const view = btn.getAttribute('data-chart-view');
+          chartCa.style.display = view === 'ca' ? 'block' : 'none';
+          chartUs.style.display = view === 'us' ? 'block' : 'none';
         });
       });
 
-      // 3. Minimalist 3D Wireframe Geometric Background (Pure Canvas 3D projection)
-      const canvas = document.getElementById('canvas-3d');
+      // 4. Interactive Instrument 02 Tabs (Table I vs 1-Week Retest Drop)
+      const learnTabs = document.querySelectorAll('[data-learn-view]');
+      const tableView = document.getElementById('learn-table-view');
+      const decayView = document.getElementById('learn-decay-view');
+      learnTabs.forEach(btn => {
+        btn.addEventListener('click', () => {
+          learnTabs.forEach(b => b.classList.remove('active'));
+          btn.classList.add('active');
+          const view = btn.getAttribute('data-learn-view');
+          tableView.style.display = view === 'table' ? 'block' : 'none';
+          decayView.style.display = view === 'decay' ? 'flex' : 'none';
+        });
+      });
+
+      // 5. Interactive Appendix B Rating Simulator
+      const rateBtns = document.querySelectorAll('[data-rate]');
+      const outcomeBox = document.getElementById('rate-outcome-box');
+      const outcomes = {
+        ontrack: '<strong>On track:</strong> The supervisor selects one rating in WaterlooWorks and may add one comment. The rating is shared with the student and used only in aggregate by ECE.',
+        support: '<strong>Needs support (Follow-up Triggered):</strong> If a student is rated Needs support, the supervisor assigns one task in the second half of the term that the student completes and explains without AI.',
+        notyet: '<strong>Not yet able to explain own work:</strong> Flagged during the 20-minute week 6–7 check-in so the student and supervisor can address comprehension and independent debugging before the end of the term.'
+      };
+      rateBtns.forEach(btn => {
+        btn.addEventListener('click', () => {
+          rateBtns.forEach(b => b.classList.remove('active'));
+          btn.classList.add('active');
+          outcomeBox.innerHTML = outcomes[btn.getAttribute('data-rate')];
+        });
+      });
+
+      // 6. 3D Orbital Telemetry Sphere in Hero Canvas
+      const canvas = document.getElementById('hero-canvas');
       const ctx = canvas.getContext('2d');
-      let width = (canvas.width = window.innerWidth);
-      let height = (canvas.height = window.innerHeight);
+      let w = (canvas.width = window.innerWidth);
+      let h = (canvas.height = window.innerHeight);
 
       window.addEventListener('resize', () => {
-        width = canvas.width = window.innerWidth;
-        height = canvas.height = window.innerHeight;
+        w = canvas.width = window.innerWidth;
+        h = canvas.height = window.innerHeight;
       });
 
-      // Create subtle 3D polyhedral lattice nodes
-      const nodes = [];
-      const edges = [];
-      const rings = 5;
-      const perRing = 8;
+      const pts = [];
+      const latRings = 9;
+      const lonSteps = 22;
+      const radius = 250;
 
-      for (let r = 0; r < rings; r++) {
-        const y = (r - (rings - 1) / 2) * 170;
-        const radius = 260 + Math.sin(r * 0.9) * 90;
-        for (let i = 0; i < perRing; i++) {
-          const angle = (i / perRing) * Math.PI * 2 + r * 0.35;
-          nodes.push({
-            x: Math.cos(angle) * radius,
-            y: y,
-            z: Math.sin(angle) * radius
+      for (let i = 1; i < latRings; i++) {
+        const phi = (i / latRings) * Math.PI;
+        for (let j = 0; j < lonSteps; j++) {
+          const theta = (j / lonSteps) * Math.PI * 2;
+          pts.push({
+            x: radius * Math.sin(phi) * Math.cos(theta),
+            y: radius * Math.cos(phi),
+            z: radius * Math.sin(phi) * Math.sin(theta),
+            ring: i,
+            step: j
           });
-          const idx = r * perRing + i;
-          const nextInRing = r * perRing + ((i + 1) % perRing);
-          edges.push([idx, nextInRing]);
-          if (r < rings - 1) {
-            edges.push([idx, (r + 1) * perRing + i]);
-          }
         }
       }
 
-      let mouseX = 0;
-      let mouseY = 0;
-      window.addEventListener('mousemove', (e) => {
-        mouseX = (e.clientX / width - 0.5) * 0.5;
-        mouseY = (e.clientY / height - 0.5) * 0.5;
+      let mx = 0, my = 0;
+      window.addEventListener('mousemove', e => {
+        mx = (e.clientX / w - 0.5) * 0.45;
+        my = (e.clientY / h - 0.5) * 0.35;
       }, { passive: true });
 
-      function render3D() {
-        ctx.clearRect(0, 0, width, height);
-        const scrollRatio = (window.scrollY || 0) * 0.00065;
-        const rotY = scrollRatio + mouseX + performance.now() * 0.00008;
-        const rotX = mouseY * 0.6 + Math.sin(scrollRatio) * 0.25;
+      function animate(t) {
+        ctx.clearRect(0, 0, w, h);
+        const ry = t * 0.00022 + mx;
+        const rx = 0.28 + my;
+        const cy = Math.cos(ry), sy = Math.sin(ry);
+        const cx = Math.cos(rx), sx = Math.sin(rx);
 
-        const cosY = Math.cos(rotY);
-        const sinY = Math.sin(rotY);
-        const cosX = Math.cos(rotX);
-        const sinX = Math.sin(rotX);
+        const cxCenter = w * 0.68;
+        const cyCenter = h * 0.43;
+        const fov = 680;
 
-        const fov = 750;
-        const projected = nodes.map(n => {
-          // Rotate Y
-          let x1 = n.x * cosY - n.z * sinY;
-          let z1 = n.z * cosY + n.x * sinY;
-          // Rotate X
-          let y2 = n.y * cosX - z1 * sinX;
-          let z2 = z1 * cosX + n.y * sinX + 680;
+        // Subtle atmospheric horizon arc
+        const grad = ctx.createRadialGradient(cxCenter, cyCenter, 40, cxCenter, cyCenter, 420);
+        grad.addColorStop(0, 'rgba(134, 237, 244, 0.13)');
+        grad.addColorStop(0.55, 'rgba(28, 92, 120, 0.06)');
+        grad.addColorStop(1, 'transparent');
+        ctx.fillStyle = grad;
+        ctx.beginPath();
+        ctx.arc(cxCenter, cyCenter, 420, 0, Math.PI * 2);
+        ctx.fill();
 
-          const scale = fov / Math.max(120, z2);
+        const proj = pts.map(p => {
+          const x1 = p.x * cy - p.z * sy;
+          const z1 = p.z * cy + p.x * sy;
+          const y2 = p.y * cx - z1 * sx;
+          const z2 = z1 * cx + p.y * sx + 560;
+          const s = fov / z2;
           return {
-            px: width * 0.58 + x1 * scale,
-            py: height * 0.5 + y2 * scale,
+            x: cxCenter + x1 * s,
+            y: cyCenter + y2 * s,
             z: z2,
-            scale: scale
+            s: s
           };
         });
 
-        ctx.lineWidth = 1;
-        for (const [a, b] of edges) {
-          const p1 = projected[a];
-          const p2 = projected[b];
-          const avgZ = (p1.z + p2.z) * 0.5;
-          const alpha = Math.max(0.02, Math.min(0.14, 140 / avgZ));
-          ctx.strokeStyle = `rgba(24, 43, 73, ${alpha.toFixed(3)})`;
-          ctx.beginPath();
-          ctx.moveTo(p1.px, p1.py);
-          ctx.lineTo(p2.px, p2.py);
-          ctx.stroke();
+        // Draw latitude connections
+        ctx.lineWidth = 0.85;
+        for (let i = 0; i < latRings - 1; i++) {
+          for (let j = 0; j < lonSteps; j++) {
+            const idx1 = i * lonSteps + j;
+            const idx2 = i * lonSteps + ((j + 1) % lonSteps);
+            const p1 = proj[idx1];
+            const p2 = proj[idx2];
+            const alpha = Math.max(0.04, Math.min(0.32, (680 - p1.z) / 500));
+            ctx.strokeStyle = `rgba(134, 237, 244, ${alpha.toFixed(3)})`;
+            ctx.beginPath();
+            ctx.moveTo(p1.x, p1.y);
+            ctx.lineTo(p2.x, p2.y);
+            ctx.stroke();
+          }
         }
 
-        for (const p of projected) {
-          const alpha = Math.max(0.05, Math.min(0.25, 170 / p.z));
-          ctx.fillStyle = `rgba(24, 43, 73, ${alpha.toFixed(3)})`;
+        // Draw nodes
+        for (const p of proj) {
+          const alpha = Math.max(0.08, Math.min(0.65, (700 - p.z) / 420));
+          ctx.fillStyle = `rgba(168, 228, 248, ${alpha.toFixed(3)})`;
           ctx.beginPath();
-          ctx.arc(p.px, p.py, Math.max(1.4, p.scale * 2.2), 0, Math.PI * 2);
+          ctx.arc(p.x, p.y, Math.max(1.1, p.s * 1.9), 0, Math.PI * 2);
           ctx.fill();
         }
 
-        requestAnimationFrame(render3D);
+        requestAnimationFrame(animate);
       }
-
-      requestAnimationFrame(render3D);
+      requestAnimationFrame(animate);
     })();
   </script>
 </body>
